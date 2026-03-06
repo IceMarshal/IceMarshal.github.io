@@ -1,34 +1,45 @@
-/* 文章字体 */
+/* ========== Article Content ========== */
+/* 调整文章正文 */
 #article-container {
-  font-size: 18px;
+  font-size: 18px !important;
   line-height: 1.8;
 }
 
-/* 代码块 */
-figure.highlight pre {
-  font-size: 15px;
-  line-height: 1.6;
-  font-family: "JetBrains Mono","Fira Code",monospace;
+/* 段落字体 */
+#article-container p {
+  font-size: 18px;
 }
 
-/* 文章宽度 */
-.layout_post>#post {
-  max-width: 1000px;
-}
-
-/* 标题样式 */
-#article-container h2 {
-  border-left: 4px solid #49b1f5;
-  padding-left: 8px;
-}
-
-/* 图片圆角 */
-#article-container img {
-  border-radius: 8px;
-}
-
-/* 代码块阴影 */
+/* ========== Code Block ========== */
+/* 代码块整体字体 */
 figure.highlight {
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  font-size: 15px !important;
+}
+
+/* 代码内容字体 */
+figure.highlight pre code {
+  font-size: 15px !important;
+}
+
+/* 行号字体 */
+figure.highlight .gutter {
+  font-size: 14px;
+}
+
+/* ========== Homepage ========== */
+/* 首页文章标题 */
+#recent-posts .post-title {
+  font-size: 20px;
+}
+
+/* ========== Navigation Bar ========== */
+/* 网站标题 */
+#nav .site-name {
+  font-size: 22px;
+}
+
+/* ========== Sidebar ========== */
+/* 侧边栏字体 */
+.card-widget {
+  font-size: 15px;
 }
