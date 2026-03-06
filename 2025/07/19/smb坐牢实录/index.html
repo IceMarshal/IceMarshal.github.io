@@ -1,0 +1,481 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>smb坐牢实录 | IceMarshal's Blog</title><meta name="author" content="IceMarshal"><meta name="copyright" content="IceMarshal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="今天是2025.07.19，&quot;期待已久&quot;的熵密杯正式开赛了 早上10点正式开赛，但是7点半就要上车了，明明只有40min左右的车程，但是不知道是为什么主办方要我们那么早起床，来比赛场地还打了一会游戏(bushi) 等了好一会，开幕式终于开始了，该说不说，赛场布置的大屏幕还是非常好看的，高刷新率、高帧率，把领导讲话的气场展现得淋漓尽致 开幕式结束，比赛就随之开始了，上来硬控5mi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="smb坐牢实录">
+<meta property="og:url" content="https://icemarshal.github.io/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/index.html">
+<meta property="og:site_name" content="IceMarshal&#39;s Blog">
+<meta property="og:description" content="今天是2025.07.19，&quot;期待已久&quot;的熵密杯正式开赛了 早上10点正式开赛，但是7点半就要上车了，明明只有40min左右的车程，但是不知道是为什么主办方要我们那么早起床，来比赛场地还打了一会游戏(bushi) 等了好一会，开幕式终于开始了，该说不说，赛场布置的大屏幕还是非常好看的，高刷新率、高帧率，把领导讲话的气场展现得淋漓尽致 开幕式结束，比赛就随之开始了，上来硬控5mi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/186545183">
+<meta property="article:published_time" content="2025-07-19T04:46:55.000Z">
+<meta property="article:modified_time" content="2026-01-30T12:35:29.733Z">
+<meta property="article:author" content="IceMarshal">
+<meta property="article:tag" content="CTF新手题记录">
+<meta property="article:tag" content="PTA算法题记录">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/186545183"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "smb坐牢实录",
+  "url": "https://icemarshal.github.io/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/",
+  "image": "https://avatars.githubusercontent.com/u/186545183",
+  "datePublished": "2025-07-19T04:46:55.000Z",
+  "dateModified": "2026-01-30T12:35:29.733Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "IceMarshal",
+      "url": "https://icemarshal.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://icemarshal.github.io/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'smb坐牢实录',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg" style="background-image: url(https://pica.zhimg.com/v2-49d1574f73f6b437e0419ca8ab559fb8~resize:1440:q75.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://avatars.githubusercontent.com/u/186545183" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">IceMarshal's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">smb坐牢实录</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">smb坐牢实录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-19T04:46:55.000Z" title="发表于 2025-07-19 12:46:55">2025-07-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-30T12:35:29.733Z" title="更新于 2026-01-30 20:35:29">2026-01-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B0%8F%E5%98%9F%E5%98%9F%E7%9A%84CTF%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/">小嘟嘟的CTF学习历程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>今天是2025.07.19，&quot;期待已久&quot;的<strong>熵密杯</strong>正式开赛了</br>
+早上10点正式开赛，但是7点半就要上车了，明明只有40min左右的车程，但是不知道是为什么主办方要我们那么早起床，来比赛场地还打了一会游戏(bushi)</br></p>
+<p>等了好一会，开幕式终于开始了，该说不说，赛场布置的大屏幕还是非常好看的，高刷新率、高帧率，把领导讲话的气场展现得淋漓尽致</br>
+开幕式结束，比赛就随之开始了，上来硬控5min下载3道初始赛题的zip，3个文件整整齐齐都是49.7MB，第一反应就是先下出来看一眼。比赛第3分钟左右，当时大部分队伍连赛题都还没下载完，中科大的<em>Nebula</em>已经拿下初始赛题3的一血了，当时隔壁的队伍惊呼“我们都还在下赛题！”。当然，这是整场比赛最简单的一题，也是我们队唯一能做的一题了(主要还是<em>HvAng</em>的功劳，反正我没看出来)</br>
+初始赛题3题目代码如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> typing <span class="token keyword">import</span> List<span class="token punctuation">,</span> Callable
+<span class="token keyword">from</span> hashlib <span class="token keyword">import</span> sha256
+
+<span class="token keyword">def</span> <span class="token function">hex_to_32byte_chunks</span><span class="token punctuation">(</span>hex_str<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 确保十六进制字符串长度是64的倍数（因为32字节 = 64个十六进制字符）</span>
+    <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>hex_str<span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">64</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token keyword">raise</span> ValueError<span class="token punctuation">(</span><span class="token string">"十六进制字符串长度必须是64的倍数"</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 每64个字符分割一次，并转换为字节</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span>hex_str<span class="token punctuation">[</span>i<span class="token punctuation">:</span>i <span class="token operator">+</span> <span class="token number">64</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>hex_str<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">64</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">openssl_sha256</span><span class="token punctuation">(</span>message<span class="token punctuation">:</span> <span class="token builtin">bytes</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">bytes</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> sha256<span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">.</span>digest<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">WOTSPLUS</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>
+        self<span class="token punctuation">,</span>
+        w<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">,</span>  <span class="token comment"># Winternitz 参数，控制空间与时间的复杂度</span>
+        hashfunction<span class="token punctuation">:</span> Callable <span class="token operator">=</span> openssl_sha256<span class="token punctuation">,</span>  <span class="token comment"># 哈希函数</span>
+        digestsize<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">256</span><span class="token punctuation">,</span>  <span class="token comment"># 摘要大小，单位为比特</span>
+        pubkey<span class="token punctuation">:</span> List<span class="token punctuation">[</span><span class="token builtin">bytes</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">None</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>w <span class="token operator">=</span> w
+        <span class="token keyword">if</span> <span class="token keyword">not</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">&lt;=</span> w <span class="token operator">&lt;=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> digestsize<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> ValueError<span class="token punctuation">(</span><span class="token string">"规则错误:2 &lt;= w &lt;= 2^digestsize"</span><span class="token punctuation">)</span>
+        <span class="token comment"># 消息摘要所需的密钥数量（默认8个）</span>
+        self<span class="token punctuation">.</span>msg_key_count <span class="token operator">=</span> <span class="token number">8</span>
+        <span class="token comment"># 校验和密钥数量</span>
+        self<span class="token punctuation">.</span>cs_key_count <span class="token operator">=</span> <span class="token number">0</span>
+        <span class="token comment"># 总密钥数量 = 消息密钥 + 校验和密钥</span>
+        self<span class="token punctuation">.</span>key_count <span class="token operator">=</span> self<span class="token punctuation">.</span>msg_key_count <span class="token operator">+</span> self<span class="token punctuation">.</span>cs_key_count
+        self<span class="token punctuation">.</span>hashfunction <span class="token operator">=</span> hashfunction
+        self<span class="token punctuation">.</span>digestsize <span class="token operator">=</span> digestsize
+        self<span class="token punctuation">.</span>pubkey <span class="token operator">=</span> pubkey
+
+    <span class="token decorator annotation punctuation">@staticmethod</span>
+    <span class="token keyword">def</span> <span class="token function">number_to_base</span><span class="token punctuation">(</span>num<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">,</span> base<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> num <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>  <span class="token comment"># 如果数字是 0，直接返回 0</span>
+
+        digits <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>  <span class="token comment"># 存储转换后的数字位</span>
+        <span class="token keyword">while</span> num<span class="token punctuation">:</span>
+            digits<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span>num <span class="token operator">%</span> base<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># 获取当前数字在目标进制下的个位，并添加到结果列表</span>
+            num <span class="token operator">//=</span> base  <span class="token comment"># 对数字进行整除，处理下一位</span>
+
+        <span class="token keyword">return</span> digits<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># 返回按顺序排列的结果</span>
+
+    <span class="token keyword">def</span> <span class="token function">_chain</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> value<span class="token punctuation">:</span> <span class="token builtin">bytes</span><span class="token punctuation">,</span> startidx<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">,</span> endidx<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">bytes</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>startidx<span class="token punctuation">,</span> endidx<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            value <span class="token operator">=</span> self<span class="token punctuation">.</span>hashfunction<span class="token punctuation">(</span>value<span class="token punctuation">)</span>  <span class="token comment"># 每次迭代对当前哈希值进行哈希操作</span>
+
+        <span class="token keyword">return</span> value
+
+    <span class="token keyword">def</span> <span class="token function">get_signature_base_message</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> msghash<span class="token punctuation">:</span> <span class="token builtin">bytes</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token comment"># 将消息哈希从字节转换为整数</span>
+        msgnum <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">.</span>from_bytes<span class="token punctuation">(</span>msghash<span class="token punctuation">,</span> <span class="token string">"big"</span><span class="token punctuation">)</span>
+
+        <span class="token comment"># 将消息的数字表示转换为特定进制下的比特组表示</span>
+        msg_to_sign <span class="token operator">=</span> self<span class="token punctuation">.</span>number_to_base<span class="token punctuation">(</span>msgnum<span class="token punctuation">,</span> self<span class="token punctuation">.</span>w<span class="token punctuation">)</span>
+
+        <span class="token comment"># 校验消息比特组的数量是否符合预期</span>
+        <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>msg_to_sign<span class="token punctuation">)</span> <span class="token operator">></span> self<span class="token punctuation">.</span>msg_key_count<span class="token punctuation">:</span>
+            err <span class="token operator">=</span> <span class="token punctuation">(</span>
+                <span class="token string">"The fingerprint of the message could not be split into the"</span>
+                <span class="token operator">+</span> <span class="token string">" expected amount of bitgroups. This is most likely "</span>
+                <span class="token operator">+</span> <span class="token string">"because the digestsize specified does not match to the "</span>
+                <span class="token operator">+</span> <span class="token string">" real digestsize of the specified hashfunction Excepted:"</span>
+                <span class="token operator">+</span> <span class="token string">" &#123;&#125; bitgroups\nGot: &#123;&#125; bitgroups"</span>
+            <span class="token punctuation">)</span>
+            <span class="token keyword">raise</span> IndexError<span class="token punctuation">(</span>err<span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>msg_key_count<span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>msg_to_sign<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">return</span> msg_to_sign
+
+    <span class="token keyword">def</span> <span class="token function">get_pubkey_from_signature</span><span class="token punctuation">(</span>
+        self<span class="token punctuation">,</span> digest<span class="token punctuation">:</span> <span class="token builtin">bytes</span><span class="token punctuation">,</span> signature<span class="token punctuation">:</span> List<span class="token punctuation">[</span><span class="token builtin">bytes</span><span class="token punctuation">]</span>
+    <span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span><span class="token builtin">bytes</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+        msg_to_verify <span class="token operator">=</span> self<span class="token punctuation">.</span>get_signature_base_message<span class="token punctuation">(</span>digest<span class="token punctuation">)</span>
+
+        result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> idx<span class="token punctuation">,</span> val <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>msg_to_verify<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            sig_part <span class="token operator">=</span> signature<span class="token punctuation">[</span>idx<span class="token punctuation">]</span>
+            chained_val <span class="token operator">=</span> self<span class="token punctuation">.</span>_chain<span class="token punctuation">(</span>sig_part<span class="token punctuation">,</span> val<span class="token punctuation">,</span> self<span class="token punctuation">.</span>w <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            result<span class="token punctuation">.</span>append<span class="token punctuation">(</span>chained_val<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> result
+    
+    <span class="token keyword">def</span> <span class="token function">verify</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> digest<span class="token punctuation">:</span> <span class="token builtin">bytes</span><span class="token punctuation">,</span> signature<span class="token punctuation">:</span> List<span class="token punctuation">[</span><span class="token builtin">bytes</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">bool</span><span class="token punctuation">:</span>
+        pubkey <span class="token operator">=</span> self<span class="token punctuation">.</span>get_pubkey_from_signature<span class="token punctuation">(</span>digest<span class="token punctuation">,</span> signature<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">True</span> <span class="token keyword">if</span> pubkey <span class="token operator">==</span> self<span class="token punctuation">.</span>pubkey <span class="token keyword">else</span> <span class="token boolean">False</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    pubkey_hex <span class="token operator">=</span> <span class="token string">"5057432973dc856a7a00272d83ea1c14de52b5eb3ba8b70b373db8204eb2f902450e38dbade5e9b8c2c3f8258edc4b7e8101e94ac86e4b3cba92ddf3d5de2a2b454c067a995060d1664669b45974b15b3423cec342024fe9ccd4936670ec3abaae4f6b97279bd8eb26463a8cb3112e6dcbf6301e4142b9cdc4adfb644c7b114af4f0cf8f80e22c3975ba477dc4769c3ef67ffdf2090735d81d07bc2e6235af1ee41ef332215422d31208c2bc2163d6690bd32f4926b2858ca41c12eec88c0a300571901a3f674288e4a623220fb6b70e558d9819d2f23da6d897278f4056c346d7f729f5f70805ad4e5bd25cfa502c0625ac02185e014cf36db4ebcdb3ed1a38"</span>
+    pubkey_list_bytes <span class="token operator">=</span> hex_to_32byte_chunks<span class="token punctuation">(</span>pubkey_hex<span class="token punctuation">)</span>
+    wots <span class="token operator">=</span> WOTSPLUS<span class="token punctuation">(</span>pubkey <span class="token operator">=</span> pubkey_list_bytes<span class="token punctuation">)</span>
+    digest_hex <span class="token operator">=</span> <span class="token string">"84ffb82e"</span>
+    signature_hex <span class="token operator">=</span> <span class="token string">"25d5a0e650d683506bfe9d2eca6a3a99b547a4b99398622f6666ce10131e971b6bd36841c9074fe9b4de2900ebe3fadb3202a173be486da6cf8f3d8c699c95c3454c067a995060d1664669b45974b15b3423cec342024fe9ccd4936670ec3abaae4f6b97279bd8eb26463a8cb3112e6dcbf6301e4142b9cdc4adfb644c7b114a4966398a789b56bdb09ea195925e7e8cde372305d244604c48db08f08a6e8a38951030deb25a7aaf1c07152a302ebc07d5d0893b5e9a5953f3b8500179d138b9aa90c0aaacea0c23d22a25a86c0b747c561b480175b548fcb1f4ad1153413bc74d9c049d43ffe18ceee31e5be8bdb9968103ef32fb4054a4a23c400bbfe0d89f"</span>
+    digest_bytes <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span>digest_hex<span class="token punctuation">)</span>
+    signature <span class="token operator">=</span> hex_to_32byte_chunks<span class="token punctuation">(</span>signature_hex<span class="token punctuation">)</span>
+    valid <span class="token operator">=</span> wots<span class="token punctuation">.</span>verify<span class="token punctuation">(</span>digest_bytes<span class="token punctuation">,</span>signature<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>
+
+<span class="token comment"># 历史消息摘要(16进制):</span>
+<span class="token comment"># bf0acbfe</span>
+
+<span class="token comment"># 历史签名(16进制):</span>
+<span class="token comment"># 35d9a79d19cf652305d28050af95153940b71f6c61933bed734be6f9afea37bd241254a53dd5ed3510465d16d1ce7ee10554b3a2111c20084a532fa30fbcb15264038b633d2eaf369b412dff26c89d626327ba544cfe51f3402d4a753c2a442052175f5330c0c9d5d64069ad106654e6d2f5ce867f607f0780fac7f9368366fa948e84cc3508fc89b04e78afd601015eb98e7d2bea2d8c9ad3972b953985e6a900f893a3377702524cd2ddb1325b2e1b5783e870fe8e8a7bf4c940b6f62e90907ff32a2ddfd83a6374e26ccc5af543a63dca9bb1d0070ac35d41783b367a504b88fed1cf56eeca2edc03acf977fac8348dae33f6a225caeb9d8e1c3c6b3baaf4</span>
+
+<span class="token comment"># 公钥(16进制):</span>
+<span class="token comment"># 907358fef9d0788ef921c9821993e60e983e8c783d2f4fb86e17e5f276fac684241254a53dd5ed3510465d16d1ce7ee10554b3a2111c20084a532fa30fbcb152d1a5a25a525328df2ee563a37f7f495eaea51fd26bf821110558d140d05d83b0b6d0914b2c2e6b7d10b34bb45a164cd5c34c0729059369b4e09bc85446057c1e83374a93363a35136dbb948cbefd81f2e029412688ddf6f2ba01c63c82b6299264d815a38800d4b843a8fca739caca135a2aa2d7f8c478206947bfba2dd2a61d7ff32a2ddfd83a6374e26ccc5af543a63dca9bb1d0070ac35d41783b367a504b62f4a270f10d6dfdcb1fa858c2a6990176ed96010c9328107d95d36a234ded78</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://picx.zhimg.com/v2-275f44acb415b96b58c86526adea8a5f~resize:1440:q75.png" alt="初始赛题3.exe"></p>
+<p>这题主要思路就是审代码之后想办法绕过哈希加密，因为一旦进行了哈希加密就会因为不可逆而不可控(基本不可能借助哈希来构造一个新的消息摘要和签名)，因此在看懂代码之后就明白，需要在<code>get_pubkey_from_signature</code>函数中调用<code>_chain</code>函数时的哈希操作次数为0，而终止值是self.w-1=15，即输入<code>ffffffff</code>作为消息摘要就可以让初始值为15，从而绕开哈希操作，此时从<code>get_pubkey_from_signature</code>函数得到的公钥就是签名内容，验证就是要公钥和签名一致就行，所以就直接把公钥当作签名输入即可通过验证得到<code>flag</code>
+</br>
+随后的数个小时我们把能做的事都做了一遍，因为题目做不出来，又没网，自然是非常无聊，睡觉也是姿势各异，除了个别的队伍在埋头做题，剩下的都已经呈现溃败之势了</br>
+另外必须吐槽的点必然是主办方提供的中午饭——一个华莱士牛肉汉堡,窜不窜的就先不说了，一个小汉堡压根不够塞牙缝，说实话在这方面确实有点抠门了
+</br>
+今年真的全方面坐牢，明年得好好考量了，这几个钟真的很难熬，还好能写写blog(haha)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://icemarshal.github.io">IceMarshal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://icemarshal.github.io/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/">https://icemarshal.github.io/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://icemarshal.github.io" target="_blank">IceMarshal's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://avatars.githubusercontent.com/u/186545183" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/08/09/moectf-2025%E5%8E%86%E7%A8%8B(%E9%83%A8%E5%88%86)/" title="moectf-2025历程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">moectf-2025历程</div></div><div class="info-2"><div class="info-item-1">MOECTF-2025 因为有点懒然后中途弃坑了(doge) Crypto Crypto入门指北 签到题，题目代码如下： from Crypto.PublicKey import ElGamal from Crypto.Random import get_random_bytes, random from Crypto.Util.number import * from random import * from secret import flag def generate_elgamal_keypair(bits=512):     p = getPrime(bits)     for _ in range(1000):         g = getRandomRange(2, 5)         if pow(g, (p - 1) // 2, p) != 1:             break     x = randrange(2, p - 1)     y = pow(g, x, p)     return p, g, y, x key=generate_elgam...</div></div></div></a><a class="pagination-related" href="/2024/12/15/%E5%B0%8F%E5%98%9F%E5%98%9F%E7%9A%84%E9%95%BF%E5%9F%8E%E6%9D%AFCTF/" title="小嘟嘟的长城杯CTF"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">小嘟嘟的长城杯CTF</div></div><div class="info-2"><div class="info-item-1">赛前 忙着复习(真bushi)，已经好几天没看crypto了，进到nc之前还有点心虚。当我看到HvAng和Chimedal两个人一脸奸笑的时候就知道今天注定是非常逆天的了。 比赛开始了，留给小嘟嘟的时间不多了 进到题目里面一看，第一道不会，第二道还好，别的队陆陆续续开始有血了之后也是着手去做了。题目代码如下： from Crypto.Util.number import getPrime, bytes_to_long from random import randint import os  FLAG = os.getenv("FLAG").encode() flag1 = FLAG[:15] flag2 = FLAG[15:]  def crypto1():     p = getPrime(1024)     q = getPrime(1024)     n = p * q     e = 0x10001     x1=randint(0,2**11)     y1=randint(0,2**114)     x2=randint(0,2**11)     y2=randin...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/186545183" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">IceMarshal</div><div class="author-info-description">计算机菜狗一枚</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/icemarshal"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/icemarshal" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到 IceMarshal 的博客 🚀</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/06/PTA%E4%BD%9C%E4%B8%9A%E9%A2%98%E8%AE%B0%E5%BD%95/" title="PTA作业题记录">PTA作业题记录</a><time datetime="2026-03-06T04:42:03.000Z" title="发表于 2026-03-06 12:42:03">2026-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/09/moectf-2025%E5%8E%86%E7%A8%8B(%E9%83%A8%E5%88%86)/" title="moectf-2025历程">moectf-2025历程</a><time datetime="2025-08-09T13:57:04.000Z" title="发表于 2025-08-09 21:57:04">2025-08-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/" title="smb坐牢实录">smb坐牢实录</a><time datetime="2025-07-19T04:46:55.000Z" title="发表于 2025-07-19 12:46:55">2025-07-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/15/%E5%B0%8F%E5%98%9F%E5%98%9F%E7%9A%84%E9%95%BF%E5%9F%8E%E6%9D%AFCTF/" title="小嘟嘟的长城杯CTF">小嘟嘟的长城杯CTF</a><time datetime="2024-12-15T11:10:58.000Z" title="发表于 2024-12-15 19:10:58">2024-12-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/04/%E5%A4%AAbaby%E4%BA%86/" title="太baby了">太baby了</a><time datetime="2024-12-04T13:37:43.000Z" title="发表于 2024-12-04 21:37:43">2024-12-04</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By IceMarshal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div><div class="footer_custom_text">Happy Learing And Easy Going!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'icemarshal/icemarshal.github.io',
+      'data-repo-id': '',
+      'data-category-id': '',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
