@@ -1,12 +1,34 @@
-body {
+/* 文章字体 */
+#article-container {
   font-size: 18px;
   line-height: 1.8;
 }
 
-#article-container {
-  font-size: 18px;
+/* 代码块 */
+figure.highlight pre {
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: "JetBrains Mono","Fira Code",monospace;
 }
 
-#article-container p {
-  margin: 1.2em 0;
+/* 文章宽度 */
+.layout_post>#post {
+  max-width: 1000px;
+}
+
+/* 标题样式 */
+#article-container h2 {
+  border-left: 4px solid #49b1f5;
+  padding-left: 8px;
+}
+
+/* 图片圆角 */
+#article-container img {
+  border-radius: 8px;
+}
+
+/* 代码块阴影 */
+figure.highlight {
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
