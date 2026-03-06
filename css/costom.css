@@ -1,0 +1,12 @@
+body {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+#article-container {
+  font-size: 18px;
+}
+
+#article-container p {
+  margin: 1.2em 0;
+}
