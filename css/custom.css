@@ -10,12 +10,14 @@
   font-size: 18px;
 }
 
-/* 行内代码 */
-/* #article-container :not(pre) > code {
+/* 行内代码（只影响段落/列表/表格中的 code，不影响代码块） */
+#article-container p code,
+#article-container li code,
+#article-container td code {
   font-size: 16px;
   padding: 2px 6px;
   border-radius: 4px;
-} */
+}
 
 /* ========== Code Block ========== */
 /* 代码块整体字体 */
