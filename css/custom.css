@@ -10,6 +10,13 @@
   font-size: 18px;
 }
 
+/* 行内代码 */
+#article-container :not(pre) > code {
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 /* ========== Code Block ========== */
 /* 代码块整体字体 */
 figure.highlight {
