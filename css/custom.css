@@ -1,13 +1,13 @@
 /* ========== Article Content ========== */
 /* 调整文章正文 */
 #article-container {
-  font-size: 18px !important;
+  font-size: 16px !important;
   line-height: 1.8;
 }
 
 /* 段落字体 */
 #article-container p {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* 行内代码（只影响段落/列表/表格中的 code，不影响代码块） */
@@ -22,12 +22,12 @@
 /* ========== Code Block ========== */
 /* 代码块整体字体 */
 figure.highlight {
-  font-size: 15px !important;
+  font-size: 16px !important;
 }
 
 /* 代码内容字体 */
 figure.highlight pre code {
-  font-size: 15px !important;
+  font-size: 16px !important;
 }
 
 /* 行号字体 */
