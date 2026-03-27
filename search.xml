@@ -1,132 +1,943 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>smb坐牢实录</title>
-    <url>/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/</url>
-    <content><![CDATA[今天是2025.07.19，&quot;期待已久&quot;的熵密杯正式开赛了
-早上10点正式开赛，但是7点半就要上车了，明明只有40min左右的车程，但是不知道是为什么主办方要我们那么早起床，来比赛场地还打了一会游戏(bushi)
-等了好一会，开幕式终于开始了，该说不说，赛场布置的大屏幕还是非常好看的，高刷新率、高帧率，把领导讲话的气场展现得淋漓尽致
-开幕式结束，比赛就随之开始了，上来硬控5min下载3道初始赛题的zip，3个文件整整齐齐都是49.7MB，第一反应就是先下出来看一眼。比赛第3分钟左右，当时大部分队伍连赛题都还没下载完，中科大的Nebula已经拿下初始赛题3的一血了，当时隔壁的队伍惊呼“我们都还在下赛题！”。当然，这是整场比赛最简单的一题，也是我们队唯一能做的一题了(主要还是HvAng的功劳，反正我没看出来)
-初始赛题3题目代码如下：
-from typing import List, Callable
-from hashlib import sha256
+    <title>算法作业题</title>
+    <url>/2026/03/06/PTA%E4%BD%9C%E4%B8%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[算法作业记录
 
-def hex_to_32byte_chunks(hex_str):
-    # 确保十六进制字符串长度是64的倍数（因为32字节 = 64个十六进制字符）
-    if len(hex_str) % 64 != 0:
-        raise ValueError("十六进制字符串长度必须是64的倍数")
+担心很多东西学过就忘了，就写 blog 加深印象和后期回顾
 
-    # 每64个字符分割一次，并转换为字节
-    return [bytes.fromhex(hex_str[i:i + 64]) for i in range(0, len(hex_str), 64)]
+Work 1 (摸底作业)
+1.求最小生成树的Prim算法
+题目描述：
+请编写程序，实现在带权的无向图中求最小生成树的 Prim 算法。
+注意：当多个待收录顶点到当前点集的距离等长时，按编号升序进行收录。
+输入格式：
+输入首先在第一行给出两个正整数，依次为当前要创建的图的顶点数 n（≤100）和边数 m。
+随后 m 行，每行给出一条无向边两端点的编号、权重。顶点编号从 0 开始，权重（≤100）为整数。同行数字均以一个空格分隔。
+输出格式：
+参考样例。
+首先在一行中输出 total weight = x，其中 x 为最小生成树中所有边的总权重。如果最小生成树不存在，则 x 为 −1。
+随后在一行中按顶点编号升序输出每个顶点在最小生成树中的父结点的编号。为输出简单起见，每个数字后有一个空格。
+注意：此处默认顶点 0 为最小生成树的根结点，其父结点编号规定为 −1。算法初始化时，所有顶点（除了根结点）的父结点编号默认为 0。
+输入样例 1：
+6 9
+0 1 1
+0 2 3
+1 2 6
+1 3 2
+2 3 7
+2 4 5
+2 5 4
+3 5 8
+4 5 1
+输出样例 1：
+total weight &#x3D; 11
+-1 0 0 1 5 2 
+输入样例 2：
+7 9
+0 1 1
+0 2 3
+1 2 6
+1 3 2
+2 3 7
+2 4 5
+2 5 4
+3 5 8
+4 5 1
+输出样例 2：
+total weight &#x3D; -1
+-1 0 0 1 5 2 0 
+这题就是 prim算法 的模板题，需要注意的是图一定要用邻接表储存，空间: $O(n + m)$；邻接矩阵存储，空间: $O(n \times m)$，这个内存是会爆的
+解题代码(Eager Prim)：
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;queue>
+using namespace std;
 
-def openssl_sha256(message: bytes) -> bytes:
-    return sha256(message).digest()
+typedef pair&lt;int, int> pii;
+const int INF = 0x3f3f3f3f;
 
-class WOTSPLUS:
-    def __init__(
-        self,
-        w: int = 16,  # Winternitz 参数，控制空间与时间的复杂度
-        hashfunction: Callable = openssl_sha256,  # 哈希函数
-        digestsize: int = 256,  # 摘要大小，单位为比特
-        pubkey: List[bytes] = None,
-    ) -> None:
-        self.w = w
-        if not (2 &lt;= w &lt;= (1 &lt;&lt; digestsize)):
-            raise ValueError("规则错误:2 &lt;= w &lt;= 2^digestsize")
-        # 消息摘要所需的密钥数量（默认8个）
-        self.msg_key_count = 8
-        # 校验和密钥数量
-        self.cs_key_count = 0
-        # 总密钥数量 = 消息密钥 + 校验和密钥
-        self.key_count = self.msg_key_count + self.cs_key_count
-        self.hashfunction = hashfunction
-        self.digestsize = digestsize
-        self.pubkey = pubkey
+vector&lt;int> res;
+int prim(int n, const vector&lt;vector&lt;pii>>&amp; adj) &#123;
+    vector&lt;int> dist(n, INF);
+    vector&lt;int> parent(n, 0);
+    vector&lt;bool> visited(n, false);
+    priority_queue&lt;pii, vector&lt;pii>, greater&lt;pii>> pq;
 
-    @staticmethod
-    def number_to_base(num: int, base: int) -> List[int]:
-        if num == 0:
-            return [0]  # 如果数字是 0，直接返回 0
+    dist[0] = 0;
+    parent[0] = -1;
+    pq.push(&#123;0, 0&#125;);
 
-        digits = []  # 存储转换后的数字位
-        while num:
-            digits.append(int(num % base))  # 获取当前数字在目标进制下的个位，并添加到结果列表
-            num //= base  # 对数字进行整除，处理下一位
+    int cost = 0, cnt = 0;
+    while (!pq.empty()) &#123;
+        auto [d, u] = pq.top();
+        pq.pop();
 
-        return digits[::-1]  # 返回按顺序排列的结果
+        if (visited[u]) continue;
 
-    def _chain(self, value: bytes, startidx: int, endidx: int) -> bytes:
-        for i in range(startidx, endidx):
-            value = self.hashfunction(value)  # 每次迭代对当前哈希值进行哈希操作
+        visited[u] = true;
+        cost += d;
+        cnt++;
 
-        return value
+        for (auto&amp; edge: adj[u]) &#123;
+            auto [v, w] = edge;
+            if (!visited[v] &amp;&amp; w &lt; dist[v]) &#123;
+                dist[v] = w;
+                parent[v] = u;
+                pq.push(&#123;w, v&#125;);
+            &#125;
+        &#125;
+    &#125;
 
-    def get_signature_base_message(self, msghash: bytes) -> List[int]:
-        # 将消息哈希从字节转换为整数
-        msgnum = int.from_bytes(msghash, "big")
+    res = move(parent);
+    return (cnt == n) ? cost : -1;
+&#125;
 
-        # 将消息的数字表示转换为特定进制下的比特组表示
-        msg_to_sign = self.number_to_base(msgnum, self.w)
+int main()
+&#123;
+    int n, m;
+    cin >> n >> m;
 
-        # 校验消息比特组的数量是否符合预期
-        if len(msg_to_sign) > self.msg_key_count:
-            err = (
-                "The fingerprint of the message could not be split into the"
-                + " expected amount of bitgroups. This is most likely "
-                + "because the digestsize specified does not match to the "
-                + " real digestsize of the specified hashfunction Excepted:"
-                + " &#123;&#125; bitgroups\nGot: &#123;&#125; bitgroups"
-            )
-            raise IndexError(err.format(self.msg_key_count, len(msg_to_sign)))
+    vector&lt;vector&lt;pii>> adj(n);
+    for (int i = 0; i &lt; m; i++) &#123;
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].push_back(&#123;v, w&#125;);
+        adj[v].push_back(&#123;u, w&#125;); // 无向图，别忘了加边
+    &#125;
 
-        return msg_to_sign
+    cout &lt;&lt; "total weight = " &lt;&lt; prim(n, adj) &lt;&lt; endl;
+    for (auto num : res) cout &lt;&lt; num &lt;&lt; " ";
+    cout &lt;&lt; endl;
 
-    def get_pubkey_from_signature(
-        self, digest: bytes, signature: List[bytes]
-    ) -> List[bytes]:
-        msg_to_verify = self.get_signature_base_message(digest)
+    return 0;
+&#125;
+顺便介绍一下 Lazy Prim，就是 Eager Prim 的去 dist数组 版，相比 Eager Prim 逻辑不同的是最小堆存储的是边，而不是点，代码如下：
+typedef pair&lt;int, int> pii;
 
-        result = []
-        for idx, val in enumerate(msg_to_verify):
-            sig_part = signature[idx]
-            chained_val = self._chain(sig_part, val, self.w - 1)
-            result.append(chained_val)
-        return result
+struct edge&#123;
+    int u, v, w;
+
+    auto operator&lt;=>(const edge&amp; other) const &#123;
+        if (w != other.w) return w &lt;=> other.w;
+        if (v != other.v) return v &lt;=> other.v;
+        return u &lt;=> other.u;
+    &#125;
+
+    bool operator==(const edge&amp; other) const = default;
+&#125;;
+
+vector&lt;int> res;
+int prim(int n, const vector&lt;vector&lt;pii>>&amp; adj) &#123;
+    vector&lt;bool> visited(n, false);
+    vector&lt;int> parent(n, 0);
+    priority_queue&lt;edge, vector&lt;edge>, greater&lt;edge>> pq;
+
+    visited[0] = true;
+    for (const auto&amp; [v, w]: adj[0]) pq.push(&#123;0, v, w&#125;);
+    parent[0] = -1;
+
+    int cost = 0, cnt = 1;
+    while (!pq.empty()) &#123;
+        auto [start, end, d] = pq.top();
+        pq.pop();
+
+        if (visited[end]) continue;
+
+        visited[end] = true;
+        cost += d;
+        parent[end] = start;
+        cnt++;
+
+        for (auto&amp; [v, w]: adj[end]) if (!visited[v]) pq.push(&#123;end, v, w&#125;);
+    &#125;
+
+    res = move(parent);
+    return (cnt == n) ? cost : -1;
+&#125;
+注意：
+
+
+实际上 Eager Prim 是最常用的，因为 Lazy Prim 的时间、空间复杂度都要高于 Eager (尤其是空间，在边数大的情况下可能会栈溢出)，这里写出仅是展示不同思路
+
+
+这题有严格的 tie_break 限制：
+
+当多个待收录顶点到当前点集的距离等长时，按编号升序收录。
+
+
+
+但是优先队列(priority_queue)底层是二叉堆，只保证堆顶是最小/最大，不会维护相同优先级元素的相对顺序，所以 priority_queue 是不稳定的
+
+
+于是当优先级完全相同(边权和指向点相同)时优先队列无法保证先进先出，于是这道题只能用 Eager，Lazy 会卡一个测试点
+
+
+
+
+2.最短路的交点
+题目描述：
+给定有向加权图 G，和 4 个顶点 u, v, s, t。假设图 G 中所有边的权值都非负。设计一个算法来判定“从 u 到 v 的最短路径”和“从 s 到 t 的最短路径”是否存在一个交点 w。也即，顶点 w 是 u 到 v 的最短路径上的一个顶点，同时也是 s 到 t 的最短路径上的一个顶点。
+注意：最短路径包含两个端点；一对顶点间的最短路径可能不止一条，求交点时必须将所有最短路径考虑在内。
+输入格式：
+输入第 1 行给出 6 个正整数，依次为：n（≤1000，图中顶点数）、m（≤3000，图中边数）、题面中描述的 4 个顶点 u, v, s, t 的编号。这里假设顶点从 1 到 n 编号，并且 u, v, s, t 的编号均不相同。
+随后 m 行，每行给出一条有向边的起点编号、终点编号、非负权重（≤100）。题目保证每条边都不会重复给出，同行数字间以空格分隔。
+输出格式：
+在一行中，按编号递增的顺序输出所有交点。数字间以 1 个空格分隔，行首尾不得有多余空格。如果交点不存在，则在一行中输出 No Intersection
+输入样例 1：
+6 7 1 2 3 4
+1 2 3
+1 5 1
+3 5 1
+5 6 1
+5 4 2
+6 4 1
+6 2 1
+输出样例 1：
+5 6
+输入样例 2：
+4 4 1 2 3 4
+1 2 1
+3 4 1
+1 4 1
+3 2 1
+输出样例 2：
+No Intersection
+解释：
+
+
+本题主要考察 dijkstra算法及其性质 的应用
+
+
+dijkstra算法 ：求该点到图中其它点的的最短路径长度， 二叉堆优化实现时间复杂度: $O((V+E)\log V)\approx O(E\log V)$，其中 V, E 分别是顶点数、边数
+
+
+dist_u[v]表示u 到 v 的最短路径距离，记 w 为其它点，若 dist_u[w] + dist_w[v] = dist_u[v]，则表明 w 在 u-&gt;v 的最短路径上
+
+
+对于 dist_u[w] 和 dist_u[v] 只需要对 u 跑一次 dijkstra 即可得到
+
+
+对于 dist_w[v]，我们不可能对所有点跑 dijkstra 得到所有点的 dist_x[v]，其中 x 代表任意一点，因为时间复杂度为 $O(V\cdot E\cdot \log V)$，效率太低
+
+
+
+
+于是我们不求每个点到 v 的最短路径长度，而是求 v 到各个点的最短路径长度，于是我们构建反图，即代码(main函数)中 rev
+
+
+因为这是有向图，所以原图若有 u-&gt;v，则反图应有 v-&gt;u，因为两者的路径长度是相同的，均为 w
+
+
+所以所有点到 v 的最短路径长度可以转为反图中 v 到各点的的最短路径长度(即从n次dijkstra减少到1次)
+
+
+
+
+得到 u, v, s, t 点的 dijkstra 结果数组后即可遍历各点判断交点
+
+
+注意：
+
+
+INF 一定不能参与判断逻辑，否则会被卡一个1分的测试点
+
+
+对应代码块：(同时也是核心判断逻辑)
+
+
+if (dist_u[i] != INF &amp;&amp; dist_v[i] != INF &amp;&amp;
+    dist_s[i] != INF &amp;&amp; dist_t[i] != INF &amp;&amp;
+    dist_u[i] + dist_v[i] == dist_u[v] &amp;&amp; 
+    dist_s[i] + dist_t[i] == dist_s[t]) 
+            
+    res.push_back(i);
+解题代码：
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;queue>
+using namespace std;
+
+typedef pair&lt;int, int> pii;
+const int INF = 0x3f3f3f3f;
+
+vector&lt;int> dijkstra(int n, int start, const vector&lt;vector&lt;pii>>&amp; adj) &#123;
+    vector&lt;int> dist(n + 1, INF);
+    priority_queue&lt;pii, vector&lt;pii>, greater&lt;pii>> pq;
+
+    dist[start] = 0;
+    pq.push(&#123;0, start&#125;);
+
+    while (!pq.empty()) &#123;
+        auto [d, u] = pq.top();
+        pq.pop();
+
+        if (d > dist[u]) continue;
+
+        for (auto [v, w]: adj[u]) &#123;
+            if (dist[u] + w &lt; dist[v]) &#123;
+                dist[v] = dist[u] + w;
+                pq.push(&#123;dist[v], v&#125;);
+            &#125;
+        &#125;
+    &#125;
+
+    return dist;
+&#125;
+
+int main()
+&#123;
+    int n, m, u, v, s, t;
+    cin >> n >> m >> u >> v >> s >> t;
+
+    vector&lt;vector&lt;pii>> adj(n + 1), rev(n + 1);
+    for (int i = 0; i &lt; m; i++) &#123;
+        int x, y, w;
+        cin >> x >> y >> w;
+
+        adj[x].push_back(&#123;y, w&#125;);
+        rev[y].push_back(&#123;x, w&#125;);
+    &#125;
+
+    auto dist_u = dijkstra(n, u, adj);
+    auto dist_v = dijkstra(n, v, rev);
+    auto dist_s = dijkstra(n, s, adj);
+    auto dist_t = dijkstra(n, t, rev);
+
+    vector&lt;int> res;
+
+    for (int i = 1; i &lt;= n; i++) &#123;
+        if (dist_u[i] != INF &amp;&amp; dist_v[i] != INF &amp;&amp;
+            dist_s[i] != INF &amp;&amp; dist_t[i] != INF &amp;&amp;
+            dist_u[i] + dist_v[i] == dist_u[v] &amp;&amp; 
+            dist_s[i] + dist_t[i] == dist_s[t]) 
+            
+            res.push_back(i);
+    &#125;
+
+    if (res.empty()) &#123;
+        cout &lt;&lt; "No Intersection";
+    &#125; else &#123;
+        for (int i = 0; i &lt; res.size(); i++) &#123;
+            if (i == res.size() - 1) cout &lt;&lt; res[i];
+            else cout &lt;&lt; res[i] &lt;&lt; " ";
+        &#125;
+    &#125;
+    cout &lt;&lt; endl;
     
-    def verify(self, digest: bytes, signature: List[bytes]) -> bool:
-        pubkey = self.get_pubkey_from_signature(digest, signature)
-        return True if pubkey == self.pubkey else False
+    return 0;
+&#125;
+3.强连通分量
+题目描述：
+本题请你编写程序，输出给定有向图中的各个强连通分量，并统计强连通分量的个数。
+输入格式：
+输入首先在第一行给出 2 个整数，依次为有向图的顶点数 n（0&lt;n≤15）和边数 m。
+随后 m 行，每行给出一条有向边的起点和终点编号。编号从 0 开始，其间以 1 个空格分隔。
+输出格式：
+按照 { v1 v2 ... vk } 的格式，每行输出一个强连通分量中的所有顶点 v1 ~ vk 的编号。最后一行输出强连通分量的个数。
+输入样例：
+4 5
+0 1
+1 3
+3 0
+2 1
+2 3
+输出样例：
+&#123; 0 1 3 &#125;
+&#123; 2 &#125;
+2
+注意： 强连通分量的输出顺序是不唯一的，以任何顺序输出都可以，有特殊裁判程序判断输出的正确性。例如下列输出也是正确的。
+&#123; 2 &#125;
+&#123; 1 3 0 &#125;
+2
+解释：
 
-if __name__ == "__main__":
-    pubkey_hex = "5057432973dc856a7a00272d83ea1c14de52b5eb3ba8b70b373db8204eb2f902450e38dbade5e9b8c2c3f8258edc4b7e8101e94ac86e4b3cba92ddf3d5de2a2b454c067a995060d1664669b45974b15b3423cec342024fe9ccd4936670ec3abaae4f6b97279bd8eb26463a8cb3112e6dcbf6301e4142b9cdc4adfb644c7b114af4f0cf8f80e22c3975ba477dc4769c3ef67ffdf2090735d81d07bc2e6235af1ee41ef332215422d31208c2bc2163d6690bd32f4926b2858ca41c12eec88c0a300571901a3f674288e4a623220fb6b70e558d9819d2f23da6d897278f4056c346d7f729f5f70805ad4e5bd25cfa502c0625ac02185e014cf36db4ebcdb3ed1a38"
-    pubkey_list_bytes = hex_to_32byte_chunks(pubkey_hex)
-    wots = WOTSPLUS(pubkey = pubkey_list_bytes)
-    digest_hex = "84ffb82e"
-    signature_hex = "25d5a0e650d683506bfe9d2eca6a3a99b547a4b99398622f6666ce10131e971b6bd36841c9074fe9b4de2900ebe3fadb3202a173be486da6cf8f3d8c699c95c3454c067a995060d1664669b45974b15b3423cec342024fe9ccd4936670ec3abaae4f6b97279bd8eb26463a8cb3112e6dcbf6301e4142b9cdc4adfb644c7b114a4966398a789b56bdb09ea195925e7e8cde372305d244604c48db08f08a6e8a38951030deb25a7aaf1c07152a302ebc07d5d0893b5e9a5953f3b8500179d138b9aa90c0aaacea0c23d22a25a86c0b747c561b480175b548fcb1f4ad1153413bc74d9c049d43ffe18ceee31e5be8bdb9968103ef32fb4054a4a23c400bbfe0d89f"
-    digest_bytes = bytes.fromhex(digest_hex)
-    signature = hex_to_32byte_chunks(signature_hex)
-    valid = wots.verify(digest_bytes,signature)
-    print(valid)
 
-# 历史消息摘要(16进制):
-# bf0acbfe
-
-# 历史签名(16进制):
-# 35d9a79d19cf652305d28050af95153940b71f6c61933bed734be6f9afea37bd241254a53dd5ed3510465d16d1ce7ee10554b3a2111c20084a532fa30fbcb15264038b633d2eaf369b412dff26c89d626327ba544cfe51f3402d4a753c2a442052175f5330c0c9d5d64069ad106654e6d2f5ce867f607f0780fac7f9368366fa948e84cc3508fc89b04e78afd601015eb98e7d2bea2d8c9ad3972b953985e6a900f893a3377702524cd2ddb1325b2e1b5783e870fe8e8a7bf4c940b6f62e90907ff32a2ddfd83a6374e26ccc5af543a63dca9bb1d0070ac35d41783b367a504b88fed1cf56eeca2edc03acf977fac8348dae33f6a225caeb9d8e1c3c6b3baaf4
-
-# 公钥(16进制):
-# 907358fef9d0788ef921c9821993e60e983e8c783d2f4fb86e17e5f276fac684241254a53dd5ed3510465d16d1ce7ee10554b3a2111c20084a532fa30fbcb152d1a5a25a525328df2ee563a37f7f495eaea51fd26bf821110558d140d05d83b0b6d0914b2c2e6b7d10b34bb45a164cd5c34c0729059369b4e09bc85446057c1e83374a93363a35136dbb948cbefd81f2e029412688ddf6f2ba01c63c82b6299264d815a38800d4b843a8fca739caca135a2aa2d7f8c478206947bfba2dd2a61d7ff32a2ddfd83a6374e26ccc5af543a63dca9bb1d0070ac35d41783b367a504b62f4a270f10d6dfdcb1fa858c2a6990176ed96010c9328107d95d36a234ded78
+此题主要考察 tarjan算法 应用
 
 
-这题主要思路就是审代码之后想办法绕过哈希加密，因为一旦进行了哈希加密就会因为不可逆而不可控(基本不可能借助哈希来构造一个新的消息摘要和签名)，因此在看懂代码之后就明白，需要在get_pubkey_from_signature函数中调用_chain函数时的哈希操作次数为0，而终止值是self.w-1=15，即输入ffffffff作为消息摘要就可以让初始值为15，从而绕开哈希操作，此时从get_pubkey_from_signature函数得到的公钥就是签名内容，验证就是要公钥和签名一致就行，所以就直接把公钥当作签名输入即可通过验证得到flag
+tarjan: 用一次 dfs 找出所有强连通分量
 
-随后的数个小时我们把能做的事都做了一遍，因为题目做不出来，又没网，自然是非常无聊，睡觉也是姿势各异，除了个别的队伍在埋头做题，剩下的都已经呈现溃败之势了
-另外必须吐槽的点必然是主办方提供的中午饭——一个华莱士牛肉汉堡,窜不窜的就先不说了，一个小汉堡压根不够塞牙缝，说实话在这方面确实有点抠门了
 
-今年真的全方面坐牢，明年得好好考量了，这几个钟真的很难熬，还好能写写blog(haha)
+主要维护 dfn数组, low数组, st栈
+
+
+主要讨论新增边为树边和回边的情况
+
+
+
+
+具体原理学习 Click Here
+解题代码：
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;stack>
+using namespace std;
+
+const int N = 16;
+vector&lt;int> dfn(N, 0), low(N, 0);
+vector&lt;bool> inStack(N, false);
+stack&lt;int> st;
+vector&lt;vector&lt;int>> adj(N);
+
+int timer = 0, scc_cnt = 0;
+
+void tarjan(int u) &#123;
+    dfn[u] = low[u] = ++timer;
+    st.push(u);
+    inStack[u] = true;
+
+    for (auto v : adj[u]) &#123;
+        if (!dfn[v]) &#123;
+            tarjan(v);
+            low[u] = std::min(low[u], low[v]);
+        &#125; else if (inStack[v]) &#123;
+            low[u] = std::min(low[u], dfn[v]);
+        &#125;
+    &#125;
+
+    if (dfn[u] == low[u]) &#123;
+        scc_cnt++;
+
+        cout &lt;&lt; "&#123; ";
+        while (true) &#123;
+            int top = st.top();
+            st.pop();
+            inStack[top] = false;
+
+            cout &lt;&lt; top;
+            if (top == u) break;
+            cout &lt;&lt; " ";
+        &#125;
+        cout &lt;&lt; " &#125;" &lt;&lt; endl;
+    &#125;
+&#125;
+
+int main()
+&#123;
+    int n, m;
+    cin >> n >> m;
+
+
+    for (int i = 0; i &lt; m; i++) &#123;
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+    &#125;
+
+    for (int i = 0; i &lt; n; i++) if (!dfn[i]) tarjan(i);
+    cout &lt;&lt; scc_cnt &lt;&lt; endl;
+
+    return 0;
+&#125;
+4.国际影响力代价计算
+题目描述：
+一个国家对另一个国家的影响力，与其自身实力相关，也与两国间的距离相关。在此我们做一个超级简化的国际关系模型，将所有国家排列在一个 n 行 m 列的矩阵中，并简单假设国家 A 要影响国家 B 所需要付出的代价：
+$$
+C_{AB} = S_A \times dist(A,B)
+$$
+其中：
+
+
+S_A 是国家 A 自身的实力
+
+
+dist(A,B) 是国家 A 和国家 B 之间的距离
+
+
+为简化计算，定义：
+$$
+dist(A,B) = \max(|i_A - i_B|, |j_A - j_B|)
+$$
+其中 $i_x$ 和 $j_x$ 为国家 x 所在位置的行号和列号（从 1 开始）。
+本题请你计算 每个国家要影响全球所有国家所需要付出的总代价。
+输入格式：
+输入首先在第一行给出两个正整数 n 和 m（1 ≤ m n ≤ 10^6），为国家矩阵的行数和列数。
+随后 n 行，每行给出 m 个不超过 $10^6$ 的正整数，依次代表对应位置上国家的自身实力。同行数字间以空格分隔。
+输出格式：
+输出 n 行，每行 m 个正整数，依次代表对应位置上的国家要影响全球所有国家所需要付出的总代价。
+同行数字间以 1 个空格分隔，行首尾不得有多余空格。
+输入样例：
+3 3
+2 5 7
+9 4 1
+3 6 8
+输出样例：
+26 55 91
+99 32 11
+39 66 104
+前置知识点：
+
+欧几里得距离：
+
+含义：两点间直线距离
+公式：$d = \sqrt {(x_1 - x_2)^2 + (y_1 - y_2)^2}$
+函数公式：$|x| + |y| = |d|$，图片中取 $d = 2$
+图片：
+
+
+曼哈顿距离：
+
+含义：只能横平竖直走的距离
+公式：$d = |x_2 - x_1| + |y_2 - y_1|$
+函数：$|x| + |y| = d$
+图片：
+
+
+切比雪夫距离：
+
+含义：两点之间横纵坐标差中的较大值
+公式：$d = \max (|x_2 - x_1|,|y_2 - y_1|)$
+函数：$\lim_{p \to \infty} (|x|^p + |y|^p = d^p)$，实际上当 $p \to \infty$ 时图形为正方形，图片中取 $p = 100$ 方便直观感受
+图片：
+
+分析：
+题中就是求从所有点到一点的 切比雪夫距离 之和，即
+$$
+S_A  \times \sum_B  dist(A, B)
+$$
+，核心就是求 $\sum_B  dist(A, B)$
+如果暴力计算时间复杂度将达到 $O((nm)^2)$，最大 $10^{12}$，因此我们要想办法把 $\max(|dx|, |dy|)$ 变为容易处理的形式
+
+
+常见技巧：坐标旋转 $45^{\circ}$，将二维的 切比雪夫距离 拆成两个一维的 曼哈顿距离
+
+
+数学变换过程：
+核心公式：
+$$
+\max(x,y) = \frac {\left|x+y\right| + \left|x-y\right|}{2}
+$$
+题目中定义：$dist(A,B) = \max(\left|i_A - i_B\right|, \left|j_A - j_B\right|)$
+令 $dx = i_A - i_B,\ dy = j_A - j_B$，则有
+$$
+dist(A,B) = \frac {\left|dx + dy\right| + \left|dx - dy\right|}{2}
+$$
+再定义坐标变换 $u = i + j,\ v = i - j$，则
+$$
+\begin{aligned}
+|dx + dy| &amp;= |u_A - u_B|\\
+|dx - dy| &amp;= |v_A - v_B|
+\end{aligned}
+$$
+，因此
+$$
+dist(A,B) = \frac {\left|u_A - u_B\right| + \left|v_A - v_B\right|}{2}
+$$
+，于是
+$$
+\sum_B dist(A,B) = \frac {\sum_B \left|u_A - u_B\right| + \sum_B \left|v_A - v_B\right|}{2}
+$$
+几何解释：
+这个变换实际上是 线性变换：
+$$
+\begin{pmatrix} u \\ v \end{pmatrix} = \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix}
+$$
+几何上相当于：
+
+坐标轴旋转 $45^{\circ}$ (上面图片可以直观感受到)
+做一个缩放(这里的系数是 $\frac 12$)
+
+此时，问题变成对所有点计算其它点的绝对值距离和，这可以用 排序 + 前缀和 在 $O(\log n)$ 求出
+u，v 都是一维变量，现在只需求 $\sum \left|x - x_i\right|$
+
+
+如何在一个数组中快速求 $\sum \left|x - x_i\right|$
+定义排序后数组 arr = [1, 2, 3, 4, 6, 7]，N = arr.size() &lt;= 1e6
+若对 arr[3] = 4 求 $\sum \left|x - x_i\right|$，元素4 左边的元素求和得到
+$$
+Left = (4 - 1) + (4 - 2) + (4 - 3) = 4 \cdot 3 - (1 + 2 + 3)
+$$
+即 Left = arr[pos] * pos - prefix[pos]
+
+此处的 prefix 前缀和数组应为 [0, 1, 3, 6, 10, 16, 23]
+
+，定义 totalSum = prefix[N] ，同理右侧元素求和得到
+$$
+Right = (6 - 4) + (7 - 4) = (6 + 7) - 4 \cdot 2
+$$
+即 Right = (totalSum - prefix[pos + 1]) - arr[pos] * (N - pos - 1)
+$$
+\sum \left|x - x_i\right| = Left + Right
+$$
+至此便算出了一个元素对数组中其他元素的差值的绝对值和
+
+
+桶计数优化：
+$$
+\begin{cases}
+u = i + j \in [0, n + m]\\
+v = i - j \in [1 - m, n - 1]
+\end{cases}
+$$
+由于 u, v 的值域很小，因此可以采用桶计数(值域小代表空间复杂度小)，即记录每个值出现的次数，并通过前缀和在 $O(1)$ 计算 $\sum \left|x - x_i\right|$
+
+
+时间复杂度分析：(桶计数优化后不需要排序)
+
+
+前缀和数组计算 $O(n + m)$, 排序位置数组计算 $O(n + m)$
+
+
+每个元素计算过程时间复杂度为 $O(1)$，所有元素即为 $O(N)$
+
+
+总时间复杂度为 $O(N)$
+
+
+
+
+解题代码：
+#include &lt;iostream>
+#include &lt;queue>
+#include &lt;vector>
+#include &lt;algorithm>
+
+using namespace std;
+using ll = long long;
+
+int main()
+&#123;
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n, m;
+    cin >> n >> m;
+
+    int N = n * m;
+    int UMAX = n + m + 5, VMAX = n + m + 5;
+
+    vector&lt;ll> S(N), Cost(N);
+    vector&lt;int> U(N), V(N);
+
+    // cntU 数组记录数组中 &lt;=u 的数的个数(用前缀和的方式计算)
+    // 同理，sumPreU 数组记录当前前缀和
+    vector&lt;ll> cntU(UMAX, 0), cntV(VMAX, 0), sumPreU(UMAX, 0), sumPreV(VMAX, 0);
+    
+    int idx = 0, offset = m;
+    for (int i = 0; i &lt; n; i++) &#123;
+        for (int j = 0; j &lt; m; j++) &#123;
+            cin >> S[idx];
+
+            int u = i + j;
+            int v = i - j + offset;
+
+            U[idx] = u;
+            V[idx] = v;
+            idx++;
+
+            cntU[u]++;
+            cntV[v]++;
+        &#125;
+    &#125;
+
+    for (int i = 1; i &lt; UMAX; i++) &#123;
+        sumPreU[i] = sumPreU[i - 1] + cntU[i] * i;
+        cntU[i] += cntU[i - 1];
+    &#125;
+
+    for (int i = 1; i &lt; VMAX; i++) &#123;
+        sumPreV[i] = sumPreV[i - 1] + cntV[i] * i;
+        cntV[i] += cntV[i - 1];
+    &#125;
+
+    ll totalSumU = sumPreU[UMAX - 1];
+    ll totalSumV = sumPreV[VMAX - 1];
+    
+    for (int i = 0; i &lt; N; i++) &#123;
+        int u = U[i];
+        int v = V[i];
+
+        ll ULeft = 1LL * u * cntU[u] - sumPreU[u];
+        ll URight = (totalSumU - sumPreU[u]) - 1LL * u * (N - cntU[u]);
+
+        ll VLeft = 1LL * v * cntV[v] - sumPreV[v];
+        ll VRight = (totalSumV - sumPreV[v]) - 1LL * v * (N - cntV[v]);
+
+        ll dist = (ULeft + URight + VLeft + VRight);
+        Cost[i] = S[i] * dist / 2;
+    &#125;
+
+    idx = 0;
+    for (int i = 0; i &lt; n; i++) &#123;
+        for (int j = 0; j &lt; m; j++) &#123;
+            if (j == m - 1) cout &lt;&lt; Cost[idx++];
+            else cout &lt;&lt; Cost[idx++] &lt;&lt; " ";
+        &#125;
+
+        cout &lt;&lt; "\n";
+    &#125;
+
+    return 0;
+&#125;
+
+后面的题有点小难，还在努力中...结束了也没写出来
+
+Work 2 (分治专题)
+2.货仓选址
+题目描述：
+在一条数轴上有 N 家商店，它们的坐标分别为 A1~AN。
+现在需要在数轴上建立一家货仓，每天清晨，从货仓到每家商店都要运送一车商品。为了提高效率，求把货仓建在何处，可以使得货仓到每家商店的距离之和最小
+输入格式:
+第一行输入整数N, 第二行N个整数A1~AN。1≤N≤100000,  0≤Ai≤40000
+输出格式:
+输出一个整数，表示距离之和的最小值。
+输入样例:
+4
+6 2 9 1
+输出样例:
+12
+分析：
+所有点到数轴上一点 $x$ 的距离之和 $S = \sum_{i=1}^{N} \left| A_i - x \right|$，要使得 $S$ 最小，则 $x$ 应为 $A_i$ 的 中位数，为什么呢？
+先把坐标排好序，即 $A_1 \leq A_2 \leq \cdots \leq A_N$。
+假设货仓的位置建在 $x$，则考虑将货仓 $x$ 往右移一格
+
+
+在 $x$ 左边的商店到货仓的距离都会 +1
+
+
+在 $x$ 右边的商店到货仓的距离都会 -1
+
+
+所以总距离变化值为 (左边的商店数) - (右边的商店数)
+
+
+若左边的商店更多，则此时不应该向右移动，否则会使距离总和变大
+
+
+若右边的商店更多，则此时应该向右移动使总和变小
+
+
+若两边的商店数一样，则此时左右移动都不会使距离更小
+
+
+最后会发现：哪里商店多 $x$ 就应该往哪里走，最终落在 中位数 的值上
+所以思路就是：
+
+
+先排序
+
+
+找到中位数
+
+
+累加 $\left| A_i - x\right|$ 得到答案
+
+
+解题代码：
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;algorithm>
+
+using std::cin;
+using std::cout;
+
+using i64 = long long;
+
+int main()
+&#123;
+    int n;
+    cin >> n;
+    std::vector&lt;int> arr(n);
+
+    for (int i = 0; i &lt; n; i++) &#123;
+        cin >> arr[i];
+    &#125;
+
+    std::ranges::sort(arr);
+    int middle = arr[n/2];
+    
+    i64 sum = 0;
+    for (int i = 0; i &lt; n; i++) &#123;
+        if (arr[i] > middle) sum += arr[i] - middle;
+        else sum += middle - arr[i];
+    &#125;
+
+    cout &lt;&lt; sum ;
+
+    return 0;
+&#125;
+6.输油管道问题
+题目描述：
+某石油公司计划建造一条由东向西的主输油管道。该管道要穿过一个有n 口油井的油田。从每口油井都要有一条输油管道沿最短路经(或南或北)与主管道相连。如果给定n口油井的位置,即它们的x 坐标（东西向）和y 坐标（南北向）,应如何确定主管道的最优位置,即使各油井到主管道之间的输油管道长度总和最小的位置?  证明可在线性时间内确定主管道的最优位置。
+给定n口油井的位置, 计算各油井到主管道之间的输油管道最小长度总和。
+输入格式:
+输入的第1 行是油井数n，1&lt;=n&lt;=10000。接下来n 行是
+油井的位置，每行2个用空格割开的整数 x和 y，-10000&lt;=x，y&lt;=10000。
+输出格式:
+输出油井到主管道之间的输油管道最小长度总和。
+输入样例:
+5
+1 2
+2 2
+1 3
+3 -2
+3 3
+输出样例:
+6
+分析：
+这与 Work 2-2 的题目很像，就是求所有点到一条水平线的纵向距离之和 $S = \sum_{i=1}^n \left|y_i - y\right|$，其中 y 是该水平线的纵坐标。
+是不是很眼熟？依旧是 排序找中位数。另外，题目所给的横坐标 $x_i$ 是多余的
+解题代码：
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;algorithm>
+
+using std::cin;
+using std::cout;
+
+int main()
+&#123;
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    int n, x;
+    cin >> n;
+    std::vector&lt;int> y(n + 1);
+    for (int i = 1; i &lt;= n; i++) cin >> x >> y[i];
+    std::sort(y.begin() + 1, y.end());
+
+    // 找中位数这里写复杂了，参考第二题写法即可
+    int mid;
+    if (n &amp; 1) mid = y[(n + 1) >> 1];
+    else mid = (y[n >> 1] + y[(n >> 1) + 1]) >> 1;
+
+    int ans = 0;
+    for (int i = 1; i &lt;= n; i++) &#123;
+        if (y[i] >= mid) ans += y[i] - mid;
+        else ans += mid - y[i];
+    &#125;
+
+    cout &lt;&lt; ans &lt;&lt; '\n';
+
+    return 0;
+&#125;
+7.士兵排队
+题目描述：
+在一个划分成网格的操场上，n个士兵散乱地站在网格点上。网格点用整数坐标(x,y)表示。士兵们可以沿网格边往上、下、左、右移动一步，但在同一时刻任一网格点上只能有一名士兵。按照军官的命令，士兵们要整齐地列成一个水平队列，即排列成(x,y),(x+1,y),…,(x+n-1,y)。如何选择x和y的值才能使士兵们以最少的总移动步数排成一行。
+编程计算使所有士兵排成一行需要的最少移动步数。
+题目引自POJ
+输入格式:
+第1行是士兵数n，1≤n≤10000。接下来n行是士兵的初始位置，每行有2个整数x和y，-10000≤x，y≤10000。
+输出格式:
+一个数据，即士兵排成一行需要的最少移动步数。
+输入样例:
+5
+1  2
+2  2
+1  3
+3  -2
+3  3
+输出样例:
+8
+分析：
+
+
+首先从纵向来看，最终士兵要站到同一行上，所以要移动到哪一行才能让士兵的纵向移动距离之和最小呢？依然是 中位数！如果此时还没形成条件反射那就得反思了！
+
+
+然后看横向(此题难点)
+
+
+结论：定义一个新数组 $s$，其中 $s_i = x_i - i + 1$，找到这个数组的 中位数 (设为 $mid_s$)作为基准求出 $\sum_{i=1}^n \left| s_i - mid_s\right|$ 即是横向移动距离之和的最小值
+
+
+解释：将 $x_i$ 排序，假设士兵排好队后最左边的那名士兵所在的横坐标是 $s$，则 $x_1$ 到 $s$，$x_2$ 到 $s+1$，$\cdots$，$x_n$ 到 $s+n-1$。则横向移动的距离之和为
+
+
+$$
+\left|x_1 - s\right| + \left|x_2 - 1 - s\right| + \cdots + \left|x_n - (n - 1) - s\right|
+$$
+
+定义 $s_i = x_i - i + 1$，则实际上是在求 $\sum_{i=1}^n \left| s_i - s\right|$ 的最小值，所以依然找 中位数 即可
+
+
+
+解题代码：
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;algorithm>
+
+using std::cin;
+using std::cout;
+
+int main()
+&#123;
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+    std::vector&lt;int> x(n + 1), y(n + 1), s(n + 1);
+    for (int i = 1; i &lt;= n; i++) cin >> x[i] >> y[i];
+    std::sort(x.begin() + 1, x.end());
+    std::sort(y.begin() + 1, y.end());
+
+    for (int i = 1; i &lt;= n; i++) s[i] = x[i] - i + 1;
+    std::sort(s.begin() + 1, s.end());
+
+    int mid_s, mid_y;
+    mid_s = s[(n + 1) >> 1];
+    mid_y = y[(n + 1) >> 1];
+
+    int ans = 0;
+    for (int i = 1; i &lt;= n; i++) &#123;
+        if (s[i] >= mid_s) ans += s[i] - mid_s;
+        else ans += mid_s - s[i];
+    &#125;
+
+    for (int i = 1; i &lt;= n; i++) &#123;
+        if (y[i] >= mid_y) ans += y[i] - mid_y;
+        else ans += mid_y - y[i];
+    &#125;
+
+    cout &lt;&lt; ans &lt;&lt; '\n';
+
+    return 0;
+&#125;
+3.两个有序序列的中位数
+题目描述：
+已知有两个非降序序列S1, S2, 求S1与S2归并成一个序列的低位中位数。有序序列A0,A1,⋯,AN−1的中位数指A(N−1)/2的值,即第⌊(N+1)/2⌋个数（A0为第1个数）。S1, S2由输入的序列长度N写代码初始化
+for (int i = 0 ; i &lt; n;++i) &#123;
+    S1[i]= 2*i+1;//奇数递增序列1，3，5，7…….
+    S2[i]= 2*i;//偶数递增序列0，2，4，6，……..
+&#125;
+输入格式:
+第一行给出第一个序列的长度N（0&lt;N≤2500000）:输入样例的2500000
+第2行给出测试区间组数t  （0&lt;t&lt;10000）:输入样例的7
+后面t 行区间数据，每行分别为空格隔开的4个整数，前2个整数为第一个数组的起始下标lowa和区间元素数目n1，后2个整数为第二个数组的起始下标lowb和区间元素数目n2
+样例 0 5 9 5  解释如下：即S1 数组区间 [0, 0+5)  和 S2 数组区间[9,9+5)
+即：1，3，5，7，9 和 18，20，22，24，26
+求解这2个区间数组的中位数。显然中位数就是9，所以输出结果第一行就是9
+样例  9 5 0 5 解释如下：即S1 数组区间 [9, 9+5)  和 S2 数组区间[0,0+5)
+即：19，21，23，25，27    和  0，2，4，6，8
+求解这2个区间数组的中位数。显然中位数就是8，所以输出结果第二行就是8
+输出格式:
+依次输出每行区间数据对应2个数组的中位数。
+输入样例:
+在这里给出一组输入。例如：
+25000000
+7
+0 5 9 5 
+9 5 0 5 
+0 6 8 6 
+0 5 0 8 
+0 4 6 9 
+0 5 8 8 
+9 5 0 6 
+输出样例:
+在这里给出相应的输出。例如：
+9
+8
+11
+6
+16
+18
+10
 ]]></content>
       <categories>
-        <category>小嘟嘟的CTF学习历程</category>
+        <category>小嘟嘟的算法作业</category>
       </categories>
   </entry>
   <entry>
@@ -1090,682 +1901,132 @@ print(long_to_bytes(m))
       </categories>
   </entry>
   <entry>
-    <title>算法作业题</title>
-    <url>/2026/03/06/PTA%E4%BD%9C%E4%B8%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[算法作业记录
-
-担心很多东西学过就忘了，就写 blog 加深印象和后期回顾
-
-Work 1
-1.求最小生成树的Prim算法
-题目描述：
-请编写程序，实现在带权的无向图中求最小生成树的 Prim 算法。
-注意：当多个待收录顶点到当前点集的距离等长时，按编号升序进行收录。
-输入格式：
-输入首先在第一行给出两个正整数，依次为当前要创建的图的顶点数 n（≤100）和边数 m。
-随后 m 行，每行给出一条无向边两端点的编号、权重。顶点编号从 0 开始，权重（≤100）为整数。同行数字均以一个空格分隔。
-输出格式：
-参考样例。
-首先在一行中输出 total weight = x，其中 x 为最小生成树中所有边的总权重。如果最小生成树不存在，则 x 为 −1。
-随后在一行中按顶点编号升序输出每个顶点在最小生成树中的父结点的编号。为输出简单起见，每个数字后有一个空格。
-注意：此处默认顶点 0 为最小生成树的根结点，其父结点编号规定为 −1。算法初始化时，所有顶点（除了根结点）的父结点编号默认为 0。
-输入样例 1：
-6 9
-0 1 1
-0 2 3
-1 2 6
-1 3 2
-2 3 7
-2 4 5
-2 5 4
-3 5 8
-4 5 1
-输出样例 1：
-total weight &#x3D; 11
--1 0 0 1 5 2 
-输入样例 2：
-7 9
-0 1 1
-0 2 3
-1 2 6
-1 3 2
-2 3 7
-2 4 5
-2 5 4
-3 5 8
-4 5 1
-输出样例 2：
-total weight &#x3D; -1
--1 0 0 1 5 2 0 
-这题就是 prim算法 的模板题，需要注意的是图一定要用邻接表储存，空间: $O(n + m)$；邻接矩阵存储，空间: $O(n \times m)$，这个内存是会爆的
-解题代码(Eager Prim)：
-#include &lt;iostream>
-#include &lt;vector>
-#include &lt;queue>
-using namespace std;
-
-typedef pair&lt;int, int> pii;
-const int INF = 0x3f3f3f3f;
-
-vector&lt;int> res;
-int prim(int n, const vector&lt;vector&lt;pii>>&amp; adj) &#123;
-    vector&lt;int> dist(n, INF);
-    vector&lt;int> parent(n, 0);
-    vector&lt;bool> visited(n, false);
-    priority_queue&lt;pii, vector&lt;pii>, greater&lt;pii>> pq;
-
-    dist[0] = 0;
-    parent[0] = -1;
-    pq.push(&#123;0, 0&#125;);
-
-    int cost = 0, cnt = 0;
-    while (!pq.empty()) &#123;
-        auto [d, u] = pq.top();
-        pq.pop();
-
-        if (visited[u]) continue;
-
-        visited[u] = true;
-        cost += d;
-        cnt++;
-
-        for (auto&amp; edge: adj[u]) &#123;
-            auto [v, w] = edge;
-            if (!visited[v] &amp;&amp; w &lt; dist[v]) &#123;
-                dist[v] = w;
-                parent[v] = u;
-                pq.push(&#123;w, v&#125;);
-            &#125;
-        &#125;
-    &#125;
-
-    res = move(parent);
-    return (cnt == n) ? cost : -1;
-&#125;
-
-int main()
-&#123;
-    int n, m;
-    cin >> n >> m;
-
-    vector&lt;vector&lt;pii>> adj(n);
-    for (int i = 0; i &lt; m; i++) &#123;
-        int u, v, w;
-        cin >> u >> v >> w;
-        adj[u].push_back(&#123;v, w&#125;);
-        adj[v].push_back(&#123;u, w&#125;); // 无向图，别忘了加边
-    &#125;
-
-    cout &lt;&lt; "total weight = " &lt;&lt; prim(n, adj) &lt;&lt; endl;
-    for (auto num : res) cout &lt;&lt; num &lt;&lt; " ";
-    cout &lt;&lt; endl;
-
-    return 0;
-&#125;
-顺便介绍一下 Lazy Prim，就是 Eager Prim 的去 dist数组 版，相比 Eager Prim 逻辑不同的是最小堆存储的是边，而不是点，代码如下：
-typedef pair&lt;int, int> pii;
-
-struct edge&#123;
-    int u, v, w;
-
-    auto operator&lt;=>(const edge&amp; other) const &#123;
-        if (w != other.w) return w &lt;=> other.w;
-        if (v != other.v) return v &lt;=> other.v;
-        return u &lt;=> other.u;
-    &#125;
-
-    bool operator==(const edge&amp; other) const = default;
-&#125;;
-
-vector&lt;int> res;
-int prim(int n, const vector&lt;vector&lt;pii>>&amp; adj) &#123;
-    vector&lt;bool> visited(n, false);
-    vector&lt;int> parent(n, 0);
-    priority_queue&lt;edge, vector&lt;edge>, greater&lt;edge>> pq;
-
-    visited[0] = true;
-    for (const auto&amp; [v, w]: adj[0]) pq.push(&#123;0, v, w&#125;);
-    parent[0] = -1;
-
-    int cost = 0, cnt = 1;
-    while (!pq.empty()) &#123;
-        auto [start, end, d] = pq.top();
-        pq.pop();
-
-        if (visited[end]) continue;
-
-        visited[end] = true;
-        cost += d;
-        parent[end] = start;
-        cnt++;
-
-        for (auto&amp; [v, w]: adj[end]) if (!visited[v]) pq.push(&#123;end, v, w&#125;);
-    &#125;
-
-    res = move(parent);
-    return (cnt == n) ? cost : -1;
-&#125;
-注意：
-
-
-实际上 Eager Prim 是最常用的，因为 Lazy Prim 的时间、空间复杂度都要高于 Eager (尤其是空间，在边数大的情况下可能会栈溢出)，这里写出仅是展示不同思路
-
-
-这题有严格的 tie_break 限制：
-
-当多个待收录顶点到当前点集的距离等长时，按编号升序收录。
-
-
-
-但是优先队列(priority_queue)底层是二叉堆，只保证堆顶是最小/最大，不会维护相同优先级元素的相对顺序，所以 priority_queue 是不稳定的
-
-
-于是当优先级完全相同(边权和指向点相同)时优先队列无法保证先进先出，于是这道题只能用 Eager，Lazy 会卡一个测试点
-
-
-
-
-2.最短路的交点
-题目描述：
-给定有向加权图 G，和 4 个顶点 u, v, s, t。假设图 G 中所有边的权值都非负。设计一个算法来判定“从 u 到 v 的最短路径”和“从 s 到 t 的最短路径”是否存在一个交点 w。也即，顶点 w 是 u 到 v 的最短路径上的一个顶点，同时也是 s 到 t 的最短路径上的一个顶点。
-注意：最短路径包含两个端点；一对顶点间的最短路径可能不止一条，求交点时必须将所有最短路径考虑在内。
-输入格式：
-输入第 1 行给出 6 个正整数，依次为：n（≤1000，图中顶点数）、m（≤3000，图中边数）、题面中描述的 4 个顶点 u, v, s, t 的编号。这里假设顶点从 1 到 n 编号，并且 u, v, s, t 的编号均不相同。
-随后 m 行，每行给出一条有向边的起点编号、终点编号、非负权重（≤100）。题目保证每条边都不会重复给出，同行数字间以空格分隔。
-输出格式：
-在一行中，按编号递增的顺序输出所有交点。数字间以 1 个空格分隔，行首尾不得有多余空格。如果交点不存在，则在一行中输出 No Intersection
-输入样例 1：
-6 7 1 2 3 4
-1 2 3
-1 5 1
-3 5 1
-5 6 1
-5 4 2
-6 4 1
-6 2 1
-输出样例 1：
-5 6
-输入样例 2：
-4 4 1 2 3 4
-1 2 1
-3 4 1
-1 4 1
-3 2 1
-输出样例 2：
-No Intersection
-解释：
-
-
-本题主要考察 dijkstra算法及其性质 的应用
-
-
-dijkstra算法 ：求该点到图中其它点的的最短路径长度， 二叉堆优化实现时间复杂度: $O((V+E)\log V)\approx O(E\log V)$，其中 V, E 分别是顶点数、边数
-
-
-dist_u[v]表示u 到 v 的最短路径距离，记 w 为其它点，若 dist_u[w] + dist_w[v] = dist_u[v]，则表明 w 在 u-&gt;v 的最短路径上
-
-
-对于 dist_u[w] 和 dist_u[v] 只需要对 u 跑一次 dijkstra 即可得到
-
-
-对于 dist_w[v]，我们不可能对所有点跑 dijkstra 得到所有点的 dist_x[v]，其中 x 代表任意一点，因为时间复杂度为 $O(V\cdot E\cdot \log V)$，效率太低
-
-
-
-
-于是我们不求每个点到 v 的最短路径长度，而是求 v 到各个点的最短路径长度，于是我们构建反图，即代码(main函数)中 rev
-
-
-因为这是有向图，所以原图若有 u-&gt;v，则反图应有 v-&gt;u，因为两者的路径长度是相同的，均为 w
-
-
-所以所有点到 v 的最短路径长度可以转为反图中 v 到各点的的最短路径长度(即从n次dijkstra减少到1次)
-
-
-
-
-得到 u, v, s, t 点的 dijkstra 结果数组后即可遍历各点判断交点
-
-
-注意：
-
-
-INF 一定不能参与判断逻辑，否则会被卡一个1分的测试点
-
-
-对应代码块：(同时也是核心判断逻辑)
-
-
-if (dist_u[i] != INF &amp;&amp; dist_v[i] != INF &amp;&amp;
-    dist_s[i] != INF &amp;&amp; dist_t[i] != INF &amp;&amp;
-    dist_u[i] + dist_v[i] == dist_u[v] &amp;&amp; 
-    dist_s[i] + dist_t[i] == dist_s[t]) 
-            
-    res.push_back(i);
-解题代码：
-#include &lt;iostream>
-#include &lt;vector>
-#include &lt;queue>
-using namespace std;
-
-typedef pair&lt;int, int> pii;
-const int INF = 0x3f3f3f3f;
-
-vector&lt;int> dijkstra(int n, int start, const vector&lt;vector&lt;pii>>&amp; adj) &#123;
-    vector&lt;int> dist(n + 1, INF);
-    priority_queue&lt;pii, vector&lt;pii>, greater&lt;pii>> pq;
-
-    dist[start] = 0;
-    pq.push(&#123;0, start&#125;);
-
-    while (!pq.empty()) &#123;
-        auto [d, u] = pq.top();
-        pq.pop();
-
-        if (d > dist[u]) continue;
-
-        for (auto [v, w]: adj[u]) &#123;
-            if (dist[u] + w &lt; dist[v]) &#123;
-                dist[v] = dist[u] + w;
-                pq.push(&#123;dist[v], v&#125;);
-            &#125;
-        &#125;
-    &#125;
-
-    return dist;
-&#125;
-
-int main()
-&#123;
-    int n, m, u, v, s, t;
-    cin >> n >> m >> u >> v >> s >> t;
-
-    vector&lt;vector&lt;pii>> adj(n + 1), rev(n + 1);
-    for (int i = 0; i &lt; m; i++) &#123;
-        int x, y, w;
-        cin >> x >> y >> w;
-
-        adj[x].push_back(&#123;y, w&#125;);
-        rev[y].push_back(&#123;x, w&#125;);
-    &#125;
-
-    auto dist_u = dijkstra(n, u, adj);
-    auto dist_v = dijkstra(n, v, rev);
-    auto dist_s = dijkstra(n, s, adj);
-    auto dist_t = dijkstra(n, t, rev);
-
-    vector&lt;int> res;
-
-    for (int i = 1; i &lt;= n; i++) &#123;
-        if (dist_u[i] != INF &amp;&amp; dist_v[i] != INF &amp;&amp;
-            dist_s[i] != INF &amp;&amp; dist_t[i] != INF &amp;&amp;
-            dist_u[i] + dist_v[i] == dist_u[v] &amp;&amp; 
-            dist_s[i] + dist_t[i] == dist_s[t]) 
-            
-            res.push_back(i);
-    &#125;
-
-    if (res.empty()) &#123;
-        cout &lt;&lt; "No Intersection";
-    &#125; else &#123;
-        for (int i = 0; i &lt; res.size(); i++) &#123;
-            if (i == res.size() - 1) cout &lt;&lt; res[i];
-            else cout &lt;&lt; res[i] &lt;&lt; " ";
-        &#125;
-    &#125;
-    cout &lt;&lt; endl;
+    <title>smb坐牢实录</title>
+    <url>/2025/07/19/smb%E5%9D%90%E7%89%A2%E5%AE%9E%E5%BD%95/</url>
+    <content><![CDATA[今天是2025.07.19，&quot;期待已久&quot;的熵密杯正式开赛了
+早上10点正式开赛，但是7点半就要上车了，明明只有40min左右的车程，但是不知道是为什么主办方要我们那么早起床，来比赛场地还打了一会游戏(bushi)
+等了好一会，开幕式终于开始了，该说不说，赛场布置的大屏幕还是非常好看的，高刷新率、高帧率，把领导讲话的气场展现得淋漓尽致
+开幕式结束，比赛就随之开始了，上来硬控5min下载3道初始赛题的zip，3个文件整整齐齐都是49.7MB，第一反应就是先下出来看一眼。比赛第3分钟左右，当时大部分队伍连赛题都还没下载完，中科大的Nebula已经拿下初始赛题3的一血了，当时隔壁的队伍惊呼“我们都还在下赛题！”。当然，这是整场比赛最简单的一题，也是我们队唯一能做的一题了(主要还是HvAng的功劳，反正我没看出来)
+初始赛题3题目代码如下：
+from typing import List, Callable
+from hashlib import sha256
+
+def hex_to_32byte_chunks(hex_str):
+    # 确保十六进制字符串长度是64的倍数（因为32字节 = 64个十六进制字符）
+    if len(hex_str) % 64 != 0:
+        raise ValueError("十六进制字符串长度必须是64的倍数")
+
+    # 每64个字符分割一次，并转换为字节
+    return [bytes.fromhex(hex_str[i:i + 64]) for i in range(0, len(hex_str), 64)]
+
+def openssl_sha256(message: bytes) -> bytes:
+    return sha256(message).digest()
+
+class WOTSPLUS:
+    def __init__(
+        self,
+        w: int = 16,  # Winternitz 参数，控制空间与时间的复杂度
+        hashfunction: Callable = openssl_sha256,  # 哈希函数
+        digestsize: int = 256,  # 摘要大小，单位为比特
+        pubkey: List[bytes] = None,
+    ) -> None:
+        self.w = w
+        if not (2 &lt;= w &lt;= (1 &lt;&lt; digestsize)):
+            raise ValueError("规则错误:2 &lt;= w &lt;= 2^digestsize")
+        # 消息摘要所需的密钥数量（默认8个）
+        self.msg_key_count = 8
+        # 校验和密钥数量
+        self.cs_key_count = 0
+        # 总密钥数量 = 消息密钥 + 校验和密钥
+        self.key_count = self.msg_key_count + self.cs_key_count
+        self.hashfunction = hashfunction
+        self.digestsize = digestsize
+        self.pubkey = pubkey
+
+    @staticmethod
+    def number_to_base(num: int, base: int) -> List[int]:
+        if num == 0:
+            return [0]  # 如果数字是 0，直接返回 0
+
+        digits = []  # 存储转换后的数字位
+        while num:
+            digits.append(int(num % base))  # 获取当前数字在目标进制下的个位，并添加到结果列表
+            num //= base  # 对数字进行整除，处理下一位
+
+        return digits[::-1]  # 返回按顺序排列的结果
+
+    def _chain(self, value: bytes, startidx: int, endidx: int) -> bytes:
+        for i in range(startidx, endidx):
+            value = self.hashfunction(value)  # 每次迭代对当前哈希值进行哈希操作
+
+        return value
+
+    def get_signature_base_message(self, msghash: bytes) -> List[int]:
+        # 将消息哈希从字节转换为整数
+        msgnum = int.from_bytes(msghash, "big")
+
+        # 将消息的数字表示转换为特定进制下的比特组表示
+        msg_to_sign = self.number_to_base(msgnum, self.w)
+
+        # 校验消息比特组的数量是否符合预期
+        if len(msg_to_sign) > self.msg_key_count:
+            err = (
+                "The fingerprint of the message could not be split into the"
+                + " expected amount of bitgroups. This is most likely "
+                + "because the digestsize specified does not match to the "
+                + " real digestsize of the specified hashfunction Excepted:"
+                + " &#123;&#125; bitgroups\nGot: &#123;&#125; bitgroups"
+            )
+            raise IndexError(err.format(self.msg_key_count, len(msg_to_sign)))
+
+        return msg_to_sign
+
+    def get_pubkey_from_signature(
+        self, digest: bytes, signature: List[bytes]
+    ) -> List[bytes]:
+        msg_to_verify = self.get_signature_base_message(digest)
+
+        result = []
+        for idx, val in enumerate(msg_to_verify):
+            sig_part = signature[idx]
+            chained_val = self._chain(sig_part, val, self.w - 1)
+            result.append(chained_val)
+        return result
     
-    return 0;
-&#125;
-3.强连通分量
-题目描述：
-本题请你编写程序，输出给定有向图中的各个强连通分量，并统计强连通分量的个数。
-输入格式：
-输入首先在第一行给出 2 个整数，依次为有向图的顶点数 n（0&lt;n≤15）和边数 m。
-随后 m 行，每行给出一条有向边的起点和终点编号。编号从 0 开始，其间以 1 个空格分隔。
-输出格式：
-按照 { v1 v2 ... vk } 的格式，每行输出一个强连通分量中的所有顶点 v1 ~ vk 的编号。最后一行输出强连通分量的个数。
-输入样例：
-4 5
-0 1
-1 3
-3 0
-2 1
-2 3
-输出样例：
-&#123; 0 1 3 &#125;
-&#123; 2 &#125;
-2
-注意： 强连通分量的输出顺序是不唯一的，以任何顺序输出都可以，有特殊裁判程序判断输出的正确性。例如下列输出也是正确的。
-&#123; 2 &#125;
-&#123; 1 3 0 &#125;
-2
-解释：
+    def verify(self, digest: bytes, signature: List[bytes]) -> bool:
+        pubkey = self.get_pubkey_from_signature(digest, signature)
+        return True if pubkey == self.pubkey else False
 
+if __name__ == "__main__":
+    pubkey_hex = "5057432973dc856a7a00272d83ea1c14de52b5eb3ba8b70b373db8204eb2f902450e38dbade5e9b8c2c3f8258edc4b7e8101e94ac86e4b3cba92ddf3d5de2a2b454c067a995060d1664669b45974b15b3423cec342024fe9ccd4936670ec3abaae4f6b97279bd8eb26463a8cb3112e6dcbf6301e4142b9cdc4adfb644c7b114af4f0cf8f80e22c3975ba477dc4769c3ef67ffdf2090735d81d07bc2e6235af1ee41ef332215422d31208c2bc2163d6690bd32f4926b2858ca41c12eec88c0a300571901a3f674288e4a623220fb6b70e558d9819d2f23da6d897278f4056c346d7f729f5f70805ad4e5bd25cfa502c0625ac02185e014cf36db4ebcdb3ed1a38"
+    pubkey_list_bytes = hex_to_32byte_chunks(pubkey_hex)
+    wots = WOTSPLUS(pubkey = pubkey_list_bytes)
+    digest_hex = "84ffb82e"
+    signature_hex = "25d5a0e650d683506bfe9d2eca6a3a99b547a4b99398622f6666ce10131e971b6bd36841c9074fe9b4de2900ebe3fadb3202a173be486da6cf8f3d8c699c95c3454c067a995060d1664669b45974b15b3423cec342024fe9ccd4936670ec3abaae4f6b97279bd8eb26463a8cb3112e6dcbf6301e4142b9cdc4adfb644c7b114a4966398a789b56bdb09ea195925e7e8cde372305d244604c48db08f08a6e8a38951030deb25a7aaf1c07152a302ebc07d5d0893b5e9a5953f3b8500179d138b9aa90c0aaacea0c23d22a25a86c0b747c561b480175b548fcb1f4ad1153413bc74d9c049d43ffe18ceee31e5be8bdb9968103ef32fb4054a4a23c400bbfe0d89f"
+    digest_bytes = bytes.fromhex(digest_hex)
+    signature = hex_to_32byte_chunks(signature_hex)
+    valid = wots.verify(digest_bytes,signature)
+    print(valid)
 
-此题主要考察 tarjan算法 应用
+# 历史消息摘要(16进制):
+# bf0acbfe
 
+# 历史签名(16进制):
+# 35d9a79d19cf652305d28050af95153940b71f6c61933bed734be6f9afea37bd241254a53dd5ed3510465d16d1ce7ee10554b3a2111c20084a532fa30fbcb15264038b633d2eaf369b412dff26c89d626327ba544cfe51f3402d4a753c2a442052175f5330c0c9d5d64069ad106654e6d2f5ce867f607f0780fac7f9368366fa948e84cc3508fc89b04e78afd601015eb98e7d2bea2d8c9ad3972b953985e6a900f893a3377702524cd2ddb1325b2e1b5783e870fe8e8a7bf4c940b6f62e90907ff32a2ddfd83a6374e26ccc5af543a63dca9bb1d0070ac35d41783b367a504b88fed1cf56eeca2edc03acf977fac8348dae33f6a225caeb9d8e1c3c6b3baaf4
 
-tarjan: 用一次 dfs 找出所有强连通分量
+# 公钥(16进制):
+# 907358fef9d0788ef921c9821993e60e983e8c783d2f4fb86e17e5f276fac684241254a53dd5ed3510465d16d1ce7ee10554b3a2111c20084a532fa30fbcb152d1a5a25a525328df2ee563a37f7f495eaea51fd26bf821110558d140d05d83b0b6d0914b2c2e6b7d10b34bb45a164cd5c34c0729059369b4e09bc85446057c1e83374a93363a35136dbb948cbefd81f2e029412688ddf6f2ba01c63c82b6299264d815a38800d4b843a8fca739caca135a2aa2d7f8c478206947bfba2dd2a61d7ff32a2ddfd83a6374e26ccc5af543a63dca9bb1d0070ac35d41783b367a504b62f4a270f10d6dfdcb1fa858c2a6990176ed96010c9328107d95d36a234ded78
 
 
-主要维护 dfn数组, low数组, st栈
+这题主要思路就是审代码之后想办法绕过哈希加密，因为一旦进行了哈希加密就会因为不可逆而不可控(基本不可能借助哈希来构造一个新的消息摘要和签名)，因此在看懂代码之后就明白，需要在get_pubkey_from_signature函数中调用_chain函数时的哈希操作次数为0，而终止值是self.w-1=15，即输入ffffffff作为消息摘要就可以让初始值为15，从而绕开哈希操作，此时从get_pubkey_from_signature函数得到的公钥就是签名内容，验证就是要公钥和签名一致就行，所以就直接把公钥当作签名输入即可通过验证得到flag
 
+随后的数个小时我们把能做的事都做了一遍，因为题目做不出来，又没网，自然是非常无聊，睡觉也是姿势各异，除了个别的队伍在埋头做题，剩下的都已经呈现溃败之势了
+另外必须吐槽的点必然是主办方提供的中午饭——一个华莱士牛肉汉堡,窜不窜的就先不说了，一个小汉堡压根不够塞牙缝，说实话在这方面确实有点抠门了
 
-主要讨论新增边为树边和回边的情况
-
-
-
-
-具体原理学习 Click Here
-解题代码：
-#include &lt;iostream>
-#include &lt;vector>
-#include &lt;stack>
-using namespace std;
-
-const int N = 16;
-vector&lt;int> dfn(N, 0), low(N, 0);
-vector&lt;bool> inStack(N, false);
-stack&lt;int> st;
-vector&lt;vector&lt;int>> adj(N);
-
-int timer = 0, scc_cnt = 0;
-
-void tarjan(int u) &#123;
-    dfn[u] = low[u] = ++timer;
-    st.push(u);
-    inStack[u] = true;
-
-    for (auto v : adj[u]) &#123;
-        if (!dfn[v]) &#123;
-            tarjan(v);
-            low[u] = std::min(low[u], low[v]);
-        &#125; else if (inStack[v]) &#123;
-            low[u] = std::min(low[u], dfn[v]);
-        &#125;
-    &#125;
-
-    if (dfn[u] == low[u]) &#123;
-        scc_cnt++;
-
-        cout &lt;&lt; "&#123; ";
-        while (true) &#123;
-            int top = st.top();
-            st.pop();
-            inStack[top] = false;
-
-            cout &lt;&lt; top;
-            if (top == u) break;
-            cout &lt;&lt; " ";
-        &#125;
-        cout &lt;&lt; " &#125;" &lt;&lt; endl;
-    &#125;
-&#125;
-
-int main()
-&#123;
-    int n, m;
-    cin >> n >> m;
-
-
-    for (int i = 0; i &lt; m; i++) &#123;
-        int u, v;
-        cin >> u >> v;
-        adj[u].push_back(v);
-    &#125;
-
-    for (int i = 0; i &lt; n; i++) if (!dfn[i]) tarjan(i);
-    cout &lt;&lt; scc_cnt &lt;&lt; endl;
-
-    return 0;
-&#125;
-4.国际影响力代价计算
-题目描述：
-一个国家对另一个国家的影响力，与其自身实力相关，也与两国间的距离相关。在此我们做一个超级简化的国际关系模型，将所有国家排列在一个 n 行 m 列的矩阵中，并简单假设国家 A 要影响国家 B 所需要付出的代价：
-$$
-C_{AB} = S_A \times dist(A,B)
-$$
-其中：
-
-
-S_A 是国家 A 自身的实力
-
-
-dist(A,B) 是国家 A 和国家 B 之间的距离
-
-
-为简化计算，定义：
-$$
-dist(A,B) = \max(|i_A - i_B|, |j_A - j_B|)
-$$
-其中 $i_x$ 和 $j_x$ 为国家 x 所在位置的行号和列号（从 1 开始）。
-本题请你计算 每个国家要影响全球所有国家所需要付出的总代价。
-输入格式：
-输入首先在第一行给出两个正整数 n 和 m（1 ≤ m n ≤ 10^6），为国家矩阵的行数和列数。
-随后 n 行，每行给出 m 个不超过 $10^6$ 的正整数，依次代表对应位置上国家的自身实力。同行数字间以空格分隔。
-输出格式：
-输出 n 行，每行 m 个正整数，依次代表对应位置上的国家要影响全球所有国家所需要付出的总代价。
-同行数字间以 1 个空格分隔，行首尾不得有多余空格。
-输入样例：
-3 3
-2 5 7
-9 4 1
-3 6 8
-输出样例：
-26 55 91
-99 32 11
-39 66 104
-前置知识点：
-
-欧几里得距离：
-
-含义：两点间直线距离
-公式：$d = \sqrt {(x_1 - x_2)^2 + (y_1 - y_2)^2}$
-函数公式：$|x| + |y| = |d|$，图片中取 $d = 2$
-图片：
-
-
-曼哈顿距离：
-
-含义：只能横平竖直走的距离
-公式：$d = |x_2 - x_1| + |y_2 - y_1|$
-函数：$|x| + |y| = d$
-图片：
-
-
-切比雪夫距离：
-
-含义：两点之间横纵坐标差中的较大值
-公式：$d = \max (|x_2 - x_1|,|y_2 - y_1|)$
-函数：$\lim_{p \to \infty} (|x|^p + |y|^p = d^p)$，实际上当 $p \to \infty$ 时图形为正方形，图片中取 $p = 100$ 方便直观感受
-图片：
-
-分析：
-题中就是求从所有点到一点的 切比雪夫距离 之和，即
-$$
-S_A  \times \sum_B  dist(A, B)
-$$
-，核心就是求 $\sum_B  dist(A, B)$
-如果暴力计算时间复杂度将达到 $O((nm)^2)$，最大 $10^{12}$，因此我们要想办法把 $\max(|dx|, |dy|)$ 变为容易处理的形式
-
-
-常见技巧：坐标旋转 $45^{\circ}$，将二维的 切比雪夫距离 拆成两个一维的 曼哈顿距离
-
-
-数学变换过程：
-核心公式：
-$$
-\max(x,y) = \frac {\left|x+y\right| + \left|x-y\right|}{2}
-$$
-题目中定义：$dist(A,B) = \max(\left|i_A - i_B\right|, \left|j_A - j_B\right|)$
-令 $dx = i_A - i_B,\ dy = j_A - j_B$，则有
-$$
-dist(A,B) = \frac {\left|dx + dy\right| + \left|dx - dy\right|}{2}
-$$
-再定义坐标变换 $u = i + j,\ v = i - j$，则
-$$
-\begin{aligned}
-|dx + dy| &amp;= |u_A - u_B|\\
-|dx - dy| &amp;= |v_A - v_B|
-\end{aligned}
-$$
-，因此
-$$
-dist(A,B) = \frac {\left|u_A - u_B\right| + \left|v_A - v_B\right|}{2}
-$$
-，于是
-$$
-\sum_B dist(A,B) = \frac {\sum_B \left|u_A - u_B\right| + \sum_B \left|v_A - v_B\right|}{2}
-$$
-几何解释：
-这个变换实际上是 线性变换：
-$$
-\begin{pmatrix} u \\ v \end{pmatrix} = \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix}
-$$
-几何上相当于：
-
-坐标轴旋转 $45^{\circ}$ (上面图片可以直观感受到)
-做一个缩放(这里的系数是 $\frac 12$)
-
-此时，问题变成对所有点计算其它点的绝对值距离和，这可以用 排序 + 前缀和 在 $O(\log n)$ 求出
-u，v 都是一维变量，现在只需求 $\sum \left|x - x_i\right|$
-
-
-如何在一个数组中快速求 $\sum \left|x - x_i\right|$
-定义排序后数组 arr = [1, 2, 3, 4, 6, 7]，N = arr.size() &lt;= 1e6
-若对 arr[3] = 4 求 $\sum \left|x - x_i\right|$，元素4 左边的元素求和得到
-$$
-Left = (4 - 1) + (4 - 2) + (4 - 3) = 4 \cdot 3 - (1 + 2 + 3)
-$$
-即 Left = arr[pos] * pos - prefix[pos]
-
-此处的 prefix 前缀和数组应为 [0, 1, 3, 6, 10, 16, 23]
-
-，定义 totalSum = prefix[N] ，同理右侧元素求和得到
-$$
-Right = (6 - 4) + (7 - 4) = (6 + 7) - 4 \cdot 2
-$$
-即 Right = (totalSum - prefix[pos + 1]) - arr[pos] * (N - pos - 1)
-$$
-\sum \left|x - x_i\right| = Left + Right
-$$
-至此便算出了一个元素对数组中其他元素的差值的绝对值和
-
-
-桶计数优化：
-$$
-\begin{cases}
-u = i + j \in [0, n + m]\\
-v = i - j \in [1 - m, n - 1]
-\end{cases}
-$$
-由于 u, v 的值域很小，因此可以采用桶计数(值域小代表空间复杂度小)，即记录每个值出现的次数，并通过前缀和在 $O(1)$ 计算 $\sum \left|x - x_i\right|$
-
-
-时间复杂度分析：(桶计数优化后不需要排序)
-
-
-前缀和数组计算 $O(n + m)$, 排序位置数组计算 $O(n + m)$
-
-
-每个元素计算过程时间复杂度为 $O(1)$，所有元素即为 $O(N)$
-
-
-总时间复杂度为 $O(N)$
-
-
-
-
-解题代码：
-#include &lt;iostream>
-#include &lt;queue>
-#include &lt;vector>
-#include &lt;algorithm>
-
-using namespace std;
-using ll = long long;
-
-int main()
-&#123;
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int n, m;
-    cin >> n >> m;
-
-    int N = n * m;
-    int UMAX = n + m + 5, VMAX = n + m + 5;
-
-    vector&lt;ll> S(N), Cost(N);
-    vector&lt;int> U(N), V(N);
-
-    // cntU 数组记录数组中 &lt;=u 的数的个数(用前缀和的方式计算)
-    // 同理，sumPreU 数组记录当前前缀和
-    vector&lt;ll> cntU(UMAX, 0), cntV(VMAX, 0), sumPreU(UMAX, 0), sumPreV(VMAX, 0);
-    
-    int idx = 0, offset = m;
-    for (int i = 0; i &lt; n; i++) &#123;
-        for (int j = 0; j &lt; m; j++) &#123;
-            cin >> S[idx];
-
-            int u = i + j;
-            int v = i - j + offset;
-
-            U[idx] = u;
-            V[idx] = v;
-            idx++;
-
-            cntU[u]++;
-            cntV[v]++;
-        &#125;
-    &#125;
-
-    for (int i = 1; i &lt; UMAX; i++) &#123;
-        sumPreU[i] = sumPreU[i - 1] + cntU[i] * i;
-        cntU[i] += cntU[i - 1];
-    &#125;
-
-    for (int i = 1; i &lt; VMAX; i++) &#123;
-        sumPreV[i] = sumPreV[i - 1] + cntV[i] * i;
-        cntV[i] += cntV[i - 1];
-    &#125;
-
-    ll totalSumU = sumPreU[UMAX - 1];
-    ll totalSumV = sumPreV[VMAX - 1];
-    
-    for (int i = 0; i &lt; N; i++) &#123;
-        int u = U[i];
-        int v = V[i];
-
-        ll ULeft = 1LL * u * cntU[u] - sumPreU[u];
-        ll URight = (totalSumU - sumPreU[u]) - 1LL * u * (N - cntU[u]);
-
-        ll VLeft = 1LL * v * cntV[v] - sumPreV[v];
-        ll VRight = (totalSumV - sumPreV[v]) - 1LL * v * (N - cntV[v]);
-
-        ll dist = (ULeft + URight + VLeft + VRight);
-        Cost[i] = S[i] * dist / 2;
-    &#125;
-
-    idx = 0;
-    for (int i = 0; i &lt; n; i++) &#123;
-        for (int j = 0; j &lt; m; j++) &#123;
-            if (j == m - 1) cout &lt;&lt; Cost[idx++];
-            else cout &lt;&lt; Cost[idx++] &lt;&lt; " ";
-        &#125;
-
-        cout &lt;&lt; "\n";
-    &#125;
-
-    return 0;
-&#125;
-
-后面的题有点小难，还在努力中...
-
+今年真的全方面坐牢，明年得好好考量了，这几个钟真的很难熬，还好能写写blog(haha)
 ]]></content>
       <categories>
-        <category>小嘟嘟的算法作业</category>
+        <category>小嘟嘟的CTF学习历程</category>
       </categories>
   </entry>
 </search>
